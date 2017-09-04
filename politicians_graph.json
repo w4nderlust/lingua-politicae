@@ -1,0 +1,105 @@
+{
+  "nodes": [
+    {
+      "name": "@civati",
+      "tweets": 6785
+    },
+    {
+      "name": "@giorgiameloni",
+      "tweets": 678
+    },
+    {
+      "name": "@giulianopisapia",
+      "tweets": 39
+    },
+    {
+      "name": "@meb",
+      "tweets": 255
+    },
+    {
+      "name": "@nichivendola",
+      "tweets": 153
+    },
+    {
+      "name": "@pbersani",
+      "tweets": 78
+    }
+  ],
+  "edges": [
+    {
+      "sourceNode": 0,
+      "targetNode": 1,
+      "weight": 0.25362896969612186
+    },
+    {
+      "sourceNode": 0,
+      "targetNode": 2,
+      "weight": 0.10795486559578782
+    },
+    {
+      "sourceNode": 0,
+      "targetNode": 3,
+      "weight": 0.18635081525751518
+    },
+    {
+      "sourceNode": 0,
+      "targetNode": 4,
+      "weight": 0.24582014964494436
+    },
+    {
+      "sourceNode": 0,
+      "targetNode": 5,
+      "weight": 0.1482938345158373
+    },
+    {
+      "sourceNode": 1,
+      "targetNode": 2,
+      "weight": 0.18575864896009905
+    },
+    {
+      "sourceNode": 1,
+      "targetNode": 3,
+      "weight": 0.21112655035948
+    },
+    {
+      "sourceNode": 1,
+      "targetNode": 4,
+      "weight": 0.2153729510799857
+    },
+    {
+      "sourceNode": 1,
+      "targetNode": 5,
+      "weight": 0.3041037915322609
+    },
+    {
+      "sourceNode": 2,
+      "targetNode": 3,
+      "weight": 0.1324186324653528
+    },
+    {
+      "sourceNode": 2,
+      "targetNode": 4,
+      "weight": 0.08533272005174386
+    },
+    {
+      "sourceNode": 2,
+      "targetNode": 5,
+      "weight": 0.26967273458534285
+    },
+    {
+      "sourceNode": 3,
+      "targetNode": 4,
+      "weight": 0.16858416726471684
+    },
+    {
+      "sourceNode": 3,
+      "targetNode": 5,
+      "weight": 0.0827335057397353
+    },
+    {
+      "sourceNode": 4,
+      "targetNode": 5,
+      "weight": 0.08169579358453101
+    }
+  ]
+}
