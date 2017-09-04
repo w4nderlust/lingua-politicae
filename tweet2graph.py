@@ -168,7 +168,7 @@ for politician in politicians_sorted:
 edges = []
 for i in range(len(politicians_sorted)):
     for j in range(i + 1, len(politicians_sorted)):
-        edges.append({'sourceNode': i, 'targetNode': j,
+        edges.append({'source': i, 'target': j,
                       'weight': similarity_matrix[(politicians_sorted[i], politicians_sorted[j])]})
 graph = {'nodes': nodes, 'edges': edges}
 print("done in {:0.4f}s".format(time() - t0))
