@@ -1,6 +1,6 @@
 	
 const THRESHOLD = .2; 
-const THRESHOLD_1 = .45; 
+const THRESHOLD_1 = .3; 
 const THRESHOLD_2 = .5; 
 
 // DATA
@@ -14,8 +14,8 @@ var height = +svg.attr("height");
 // SCALES
 var dashScale = d3.scaleQuantize().domain([THRESHOLD_1, THRESHOLD_2, 1]).range(["5,5","5,10","5,20"]);
 var color = d3.scaleOrdinal(d3.schemeCategory20);
-var radiusScale = d3.scaleLog();
-var opacityScale = d3.scaleLinear()
+var radiusScale = d3.scaleLog().range([10,50]);
+var opacityScale = d3.scaleLinear().range([0,1]);
 
 // PHYSICS
 var simulation = d3.forceSimulation()
@@ -34,8 +34,8 @@ function onLoaded(error, data) {
 
 	graph = data;
 
-	radiusScale.domain(d3.extent(data.nodes, (d)=>d.tweets)).range([10,100])
-	opacityScale.domain(d3.extent(data.edges, (d)=>d.weight)).range([0,1])
+	radiusScale.domain(d3.extent(data.nodes, (d)=>d.tweets))
+	opacityScale.domain(d3.extent(data.edges, (d)=>d.weight))
 
 	var linkData = graph.edges.filter((d)=> d.weight> THRESHOLD)
 	console.log(linkData)
@@ -47,7 +47,7 @@ function onLoaded(error, data) {
 	.append("line")
 	.style("stroke-opacity", (d)=> opacityScale(d.weight))
 	.attr("stroke-width", (d)=> (d.weight > THRESHOLD_1 ? 2 : 1))
-	.attr("stroke-dasharray", (d)=> (d.weight <= THRESHOLD_1 ? dashScale(d.weight) : 0 ))
+	// .attr("stroke-dasharray", (d)=> (d.weight <= THRESHOLD_1 ? dashScale(d.weight) : 0 ))
 
 	
 
@@ -78,10 +78,10 @@ function onLoaded(error, data) {
 		.nodes(graph.nodes)
 		.on("tick", ticked);
 
-		// simulation.force("link")
-		// .links(linkData)
-		// .distance(function(d){return d.weight * 40})
-		// .strength(1);
+		simulation.force("link")
+		.links(linkData)
+		.distance(function(d){return d.weight * 400})
+		.strength(1);
 
 	}
 
