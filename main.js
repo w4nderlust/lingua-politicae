@@ -14,13 +14,13 @@ var height = +svg.attr("height");
 // SCALES
 var dashScale = d3.scaleQuantize().domain([THRESHOLD_1, THRESHOLD_2, 1]).range(["5,5","5,10","5,20"]);
 var color = d3.scaleOrdinal(d3.schemeCategory20);
-var radiusScale = d3.scaleLog().range([10,50]);
+var radiusScale = d3.scaleLinear().range([10,50]);
 var opacityScale = d3.scaleLinear().range([0,1]);
 
 // PHYSICS
 var simulation = d3.forceSimulation()
 .force("link", d3.forceLink())
-.force("charge", d3.forceManyBody().strength((d)=> -d.tweets))
+.force("charge", d3.forceManyBody())
 .force("center", d3.forceCenter(width / 2, height / 2));
 
 
@@ -46,8 +46,8 @@ function onLoaded(error, data) {
 	.enter()
 	.append("line")
 	.style("stroke-opacity", (d)=> opacityScale(d.weight))
-	.attr("stroke-width", (d)=> (d.weight > THRESHOLD_1 ? 2 : 1))
-	// .attr("stroke-dasharray", (d)=> (d.weight <= THRESHOLD_1 ? dashScale(d.weight) : 0 ))
+	// .attr("stroke-width", (d)=> (d.weight > THRESHOLD_1? 1:1.5))
+	.attr("stroke-dasharray", (d)=> (d.weight > THRESHOLD_1 ? dashScale(d.weight) : 0 ))
 
 	
 
@@ -59,6 +59,7 @@ function onLoaded(error, data) {
 	.append("circle")
 	.attr("r", (d)=> (radiusScale(d.tweets)))
 	.attr("fill", "red")
+	.style("fill-opacity", 1)
 	.call(d3.drag()
 		.on("start", dragstarted)
 		.on("drag", dragged)
@@ -80,7 +81,7 @@ function onLoaded(error, data) {
 
 		simulation.force("link")
 		.links(linkData)
-		.distance(function(d){return d.weight * 400})
+		.distance((d)=> (100 + radiusScale(d.source.tweets) + radiusScale(d.target.tweets)) )
 		.strength(1);
 
 	}
