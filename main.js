@@ -30,7 +30,7 @@ var tooltip = d3.select("body")
 var radiusScale = d3.scaleLinear().range([10,50]);
 var opacityScale = d3.scaleLinear().range([0,1]);
 var strokeScale = d3.scaleLinear().range([1,5]);
-var strengthScale = d3.scaleLinear().range([0,1]);
+var distanceScale = d3.scaleLinear().range([300,0]); // lighter weight correspond to higher distances
 
 // PHYSICS
 var simulation;
@@ -51,7 +51,7 @@ function onLoaded(error, data) {
 	// sort names alphabetically
 	graph.nodes.sort((a, b) => a.name !== b.name ? a.name < b.name ? -1 : 1 : 0);
 	// update scales
-	strengthScale.domain(d3.extent(graph.edges, (d)=>d.weight));
+	distanceScale.domain(d3.extent(graph.edges, (d)=>d.weight));
 	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
 	opacityScale.domain(d3.extent(graph.edges, (d)=>d.weight));
 	strokeScale.domain(d3.extent(graph.edges, (d)=>d.weight));
@@ -207,7 +207,7 @@ function updateGraph() {
 	if(!simulation) {
 		simulation = d3.forceSimulation()
 		.force("link", d3.forceLink())
-		.force("charge", d3.forceManyBody().strength(-140).distanceMax(50).distanceMin(10))
+		// .force("charge", d3.forceManyBody().strength(-400))
 		.force("center", d3.forceCenter(width / 2, height / 2))
 		.on("tick", ticked);
 	}
@@ -220,9 +220,8 @@ function updateGraph() {
 		// 	console.log(d.id)
 		// 	return d.id
 		// })
-	.distance(300)
-	.strength((d)=> {
-		return strengthScale(d.weight);
+	.distance((d)=> {
+		return distanceScale(d.weight);
 	});
 
 
