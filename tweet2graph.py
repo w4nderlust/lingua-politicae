@@ -1,3 +1,4 @@
+import sys
 import json
 import unidecode
 from time import time
@@ -10,19 +11,23 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 # Inputs
-tweet_files = ['civati_short.json', 'giorgiameloni_short.json', 'giulianopisapia_short.json', 'meb_short.json',
-               'nichivendola_short.json', 'pbersani_short.json']
+tweet_files = ['matteosalvinimi','matteorenzi','micheleemiliano','beppe_grillo','luigidimaio','ale_dibattista','andreaorlandosp','lauraboldrini','enricoletta','angealfa','VittorioSgarbi','SenatoreMonti','demagistris','ignaziomarino','dariofrance','serracchiani','nzingaretti','renatobrunetta','mara_carfagna','Pierferdinando','dsantanche','msgelmini','AlemannoTW','ckyenge','DavidSassoli','FinocchiaroAnna','gasparripdl','annapaolaconcia','uambrosoli','vitocrimi','mvbrambilla','corradopassera','PaolaTavernaM5S','Roberto_Fico','Storace','i_messina', 'GioMelandri','CorradinoMineo','robertalombardi','FedePizzarotti','NicolaMorra63','comilara','rosariocrocetta','rossipresidente','carlaruocco1','GiuliaSarti86','vincenzodeluca','magdicristiano','zaiapresidente','antondepierro','GiancarloCanc','barbaralezzi','ManlioDS','renatosoru','carlo_martelli']
+
 graph_file = 'politicians_graph.json'
 stopwords_file = 'italian_stopwords_big.txt'
 tweet_stopwords = ['URL', 'ELLIPSIS', 'NUMBER', 'USERNAME']
 
+with open('names.json') as data_file:    
+    names = json.load(data_file)
 
 # Utils
 def file2name(filename):
-    filename = filename.split('.')[0]
-    filename = filename.split('_')[0]
     return '@' + filename
 
+def findName(p):
+    for n in names:
+        if(n["twitter"] == p):
+            return n["name"].encode('utf-8').strip();
 
 def tokenize(text):
     tokens = [token for token in tokenizer.tokenize(unidecode.unidecode(text.replace("'", " "))) if len(token) > 2]
@@ -60,7 +65,7 @@ print("Collecting tweets...")
 t0 = time()
 tweets_so_far = 0
 for tweet_file in tweet_files:
-    with open(tweet_file) as tf:
+    with open("data/" + tweet_file +"_short.json") as tf:
         tweets = json.load(tf)
         for tweet in tweets:
             tweet_list.append(unidecode.unidecode(tweet['text']))
@@ -163,12 +168,12 @@ print("Building politicians graph...")
 t0 = time()
 nodes = []
 for politician in politicians_sorted:
-    nodes.append({'name': politician, 'tweets': len(politician_tweets[politician])})
+    nodes.append({'name': findName(politician), 'handle': politician, 'tweets': len(politician_tweets[politician])})
 
 edges = []
 for i in range(len(politicians_sorted)):
     for j in range(i + 1, len(politicians_sorted)):
-        edges.append({'sourceNode': i, 'targetNode': j,
+        edges.append({'source': i, 'target': j,
                       'weight': similarity_matrix[(politicians_sorted[i], politicians_sorted[j])]})
 graph = {'nodes': nodes, 'edges': edges}
 print("done in {:0.4f}s".format(time() - t0))

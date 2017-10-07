@@ -1,3 +1,9 @@
+# virtual env
+/bin/
+/lib/
+/include/
+/tweetokenize/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
