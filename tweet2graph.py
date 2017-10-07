@@ -11,23 +11,24 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 # Inputs
-tweet_files = ['matteosalvinimi','matteorenzi','micheleemiliano','beppe_grillo','luigidimaio','ale_dibattista','andreaorlandosp','lauraboldrini','enricoletta','angealfa','VittorioSgarbi','SenatoreMonti','demagistris','ignaziomarino','dariofrance','serracchiani','nzingaretti','renatobrunetta','mara_carfagna','Pierferdinando','dsantanche','msgelmini','AlemannoTW','ckyenge','DavidSassoli','FinocchiaroAnna','gasparripdl','annapaolaconcia','uambrosoli','vitocrimi','mvbrambilla','corradopassera','PaolaTavernaM5S','Roberto_Fico','Storace','i_messina', 'GioMelandri','CorradinoMineo','robertalombardi','FedePizzarotti','NicolaMorra63','comilara','rosariocrocetta','rossipresidente','carlaruocco1','GiuliaSarti86','vincenzodeluca','magdicristiano','zaiapresidente','antondepierro','GiancarloCanc','barbaralezzi','ManlioDS','renatosoru','carlo_martelli']
-
+tweet_files = ['matteosalvinimi', 'matteorenzi', 'micheleemiliano', 'beppe_grillo', 'luigidimaio', 'ale_dibattista',
+               'andreaorlandosp', 'lauraboldrini', 'enricoletta', 'angealfa', 'VittorioSgarbi', 'SenatoreMonti',
+               'demagistris', 'ignaziomarino', 'dariofrance', 'serracchiani', 'nzingaretti', 'renatobrunetta',
+               'mara_carfagna', 'Pierferdinando', 'dsantanche', 'msgelmini', 'AlemannoTW', 'ckyenge', 'DavidSassoli',
+               'FinocchiaroAnna', 'gasparripdl', 'annapaolaconcia', 'uambrosoli', 'vitocrimi', 'mvbrambilla',
+               'corradopassera', 'PaolaTavernaM5S', 'Roberto_Fico', 'Storace', 'i_messina', 'GioMelandri',
+               'CorradinoMineo', 'robertalombardi', 'FedePizzarotti', 'NicolaMorra63', 'comilara', 'rosariocrocetta',
+               'rossipresidente', 'carlaruocco1', 'GiuliaSarti86', 'vincenzodeluca', 'magdicristiano', 'zaiapresidente',
+               'antondepierro', 'GiancarloCanc', 'barbaralezzi', 'ManlioDS', 'renatosoru', 'carlo_martelli']
+names_file = 'names.json'
 graph_file = 'politicians_graph.json'
 stopwords_file = 'italian_stopwords_big.txt'
 tweet_stopwords = ['URL', 'ELLIPSIS', 'NUMBER', 'USERNAME']
-
-with open('names.json') as data_file:    
-    names = json.load(data_file)
 
 # Utils
 def file2name(filename):
     return '@' + filename
 
-def findName(p):
-    for n in names:
-        if(n["twitter"] == p):
-            return n["name"].encode('utf-8').strip();
 
 def tokenize(text):
     tokens = [token for token in tokenizer.tokenize(unidecode.unidecode(text.replace("'", " "))) if len(token) > 2]
@@ -48,6 +49,14 @@ def term_scores(vectorizer, matrix):
     return sorted_scores
 
 
+def cli_hist(data, bins=10):
+    bars = ' ▁▂▃▄▅▆▇█'
+    n, _ = np.histogram(data, bins=bins)
+    n2 = n * (len(bars) - 1) // max(n)
+    res = " ".join(bars[i] for i in n2)
+    return res
+
+
 # Initilization
 print("Initilizing...")
 t0 = time()
@@ -65,7 +74,7 @@ print("Collecting tweets...")
 t0 = time()
 tweets_so_far = 0
 for tweet_file in tweet_files:
-    with open("data/" + tweet_file +"_short.json") as tf:
+    with open("data/" + tweet_file + "_short.json") as tf:
         tweets = json.load(tf)
         for tweet in tweets:
             tweet_list.append(unidecode.unidecode(tweet['text']))
@@ -75,6 +84,17 @@ print("done in {:0.4f}s".format(time() - t0))
 
 # print(tweet_list)
 # print(politician_tweets)
+
+# Collect politicion names
+print("Collecting politicion names...")
+t0 = time()
+with open(names_file) as nf:
+    politician2name = {}
+    names = json.load(nf)
+    for n in names:
+        politician2name[n["twitter"]] = n["name"].strip()
+
+print("done in {:0.4f}s".format(time() - t0))
 
 # Calculating tf-idf features
 print("Calculating vectorization...")
@@ -163,12 +183,23 @@ print("done in {:0.4f}s".format(time() - t0))
 print('similarity_matrix:')
 print(sorted(similarity_matrix.items(), key=lambda x: -x[1]))
 
+print('similarity matrix scores distribution:')
+scores = np.array([v for v in similarity_matrix.values()])
+max_scores = np.max(scores)
+min_scores = np.min(scores)
+mean_scores = np.mean(scores)
+std_scores = np.std(scores)
+median_scores = np.median(scores)
+print("{} | min: {:0.4f}, mean: {:0.4f}, median: {:0.4f}, max: {:0.4f}, std: {:0.4f}".format(
+    cli_hist(scores), min_scores, mean_scores, median_scores, max_scores, std_scores))
+
 # Building politicians graph
 print("Building politicians graph...")
 t0 = time()
 nodes = []
 for politician in politicians_sorted:
-    nodes.append({'name': findName(politician), 'handle': politician, 'tweets': len(politician_tweets[politician])})
+    nodes.append(
+        {'name': politician2name[politician], 'handle': politician, 'tweets': len(politician_tweets[politician])})
 
 edges = []
 for i in range(len(politicians_sorted)):
