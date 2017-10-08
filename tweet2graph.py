@@ -4,6 +4,9 @@ import unidecode
 from time import time
 from collections import defaultdict
 
+from ascii_graph import Pyasciigraph
+from sklearn.cluster import SpectralClustering, KMeans
+from sklearn.metrics import silhouette_score, calinski_harabaz_score
 from tabulate import tabulate
 from tweetokenize import Tokenizer
 import numpy as np
@@ -24,6 +27,11 @@ names_file = 'names.json'
 graph_file = 'politicians_graph.json'
 stopwords_file = 'italian_stopwords_big.txt'
 tweet_stopwords = ['URL', 'ELLIPSIS', 'NUMBER', 'USERNAME']
+
+num_clusters_range = range(2, 15)
+clustering_algorithm = KMeans
+clustering_quality_measure = calinski_harabaz_score
+
 
 # Utils
 def file2name(filename):
@@ -47,14 +55,6 @@ def term_scores(vectorizer, matrix):
                  vectorizer.idf_)
     sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)
     return sorted_scores
-
-
-def cli_hist(data, bins=10):
-    bars = ' ▁▂▃▄▅▆▇█'
-    n, _ = np.histogram(data, bins=bins)
-    n2 = n * (len(bars) - 1) // max(n)
-    res = " ".join(bars[i] for i in n2)
-    return res
 
 
 # Initilization
@@ -194,22 +194,80 @@ percentile75_scores = np.percentile(scores, 75)
 percentile90_scores = np.percentile(scores, 90)
 max_scores = np.max(scores)
 std_scores = np.std(scores)
-frequency, values = np.histogram(scores, bins=10)
-print(cli_hist(scores))
-print(frequency.tolist())
-print(["{:0.4f}".format(v) for v in values])
+frequency, values = np.histogram(scores, bins=20)
+
+scores_ranges = []
+last = None
+for value in values:
+    if last is None:
+        last = [value, None]
+    elif last[1] is None:
+        last[1] = value
+        scores_ranges.append(last)
+    else:
+        last = [last[1], value]
+        scores_ranges.append(last)
+
+ascii_graph = Pyasciigraph()
+for line in ascii_graph.graph('Scores distribution',
+                              zip(["[{:0.4f},{:0.4f}]".format(r[0], r[1]) for r in scores_ranges], frequency)):
+    print(line)
 print(
     "min: {:0.4f}, 10th: {:0.4f}, 25th: {:0.4f}, mean: {:0.4f}, median: {:0.4f}, 75th: {:0.4f}, 90th: {:0.4f}, max: {:0.4f}, std: {:0.4f}".format(
         min_scores, percentile10_scores, percentile25_scores, mean_scores,
         median_scores, percentile75_scores, percentile90_scores, max_scores, std_scores))
 
+# Calculating clusters and finding the best scoring number of them
+print("Calculating clustering...")
+t0 = time()
+
+politician_vectors = []
+for politician in politicians_sorted:
+    politician_vectors.append(politician_proto[politician])
+politicians_matrix = np.stack(politician_vectors)
+
+quality_avgs = []
+max_quality = -1
+best_model = None
+best_cluster_labels = None
+best_cluster_distances = None
+
+for num_clusters in num_clusters_range:
+    # Initialize the model with num_clusters value and a random generator
+    # seed of 10 for reproducibility.
+    model = clustering_algorithm(n_clusters=num_clusters, random_state=10)
+    cluster_labels = model.fit_predict(politicians_matrix)
+    if getattr(model, "transform", None) is not None:
+        unnorm_cluster_distances = model.transform(politicians_matrix)
+        cluster_distances = unnorm_cluster_distances / np.expand_dims(unnorm_cluster_distances.sum(axis=1), axis=1)
+    else:
+        cluster_distances = None
+    quality_score = clustering_quality_measure(politicians_matrix, cluster_labels)
+
+    quality_avgs.append([num_clusters, quality_score])
+    if quality_score > max_quality:
+        max_quality = quality_score
+        best_model = model
+        best_cluster_labels = cluster_labels
+        best_cluster_distances = cluster_distances
+
+ascii_graph = Pyasciigraph(float_format='{0:0.4f}')
+for line in ascii_graph.graph(clustering_quality_measure.__name__, quality_avgs):
+    print(line)
+
+print("done in {:0.4f}s".format(time() - t0))
+
 # Building politicians graph
 print("Building politicians graph...")
 t0 = time()
 nodes = []
-for politician in politicians_sorted:
+for i, politician in enumerate(politicians_sorted):
     nodes.append(
-        {'name': politician2name[politician], 'handle': politician, 'tweets': len(politician_tweets[politician])})
+        {'name': politician2name[politician],
+         'handle': politician,
+         'tweets': len(politician_tweets[politician]),
+         'cluster': np.asscalar(best_cluster_labels[i]),
+         'cluster_distances': best_cluster_distances[i].tolist() if best_cluster_distances is not None else None})
 
 edges = []
 for i in range(len(politicians_sorted)):

@@ -3,277 +3,662 @@
     {
       "name": "Gianni Alemanno",
       "handle": "@AlemannoTW",
-      "tweets": 1112
+      "tweets": 1112,
+      "cluster": 0,
+      "cluster_distances": [
+        0.046300385821710435,
+        0.4478474341259709,
+        0.2928141389609631,
+        0.2130380410913557
+      ]
     },
     {
       "name": "Corradino Mineo",
       "handle": "@CorradinoMineo",
-      "tweets": 745
+      "tweets": 745,
+      "cluster": 0,
+      "cluster_distances": [
+        0.09072882054789956,
+        0.41857325352682034,
+        0.28056792259779123,
+        0.21013000332748893
+      ]
     },
     {
       "name": "David Sassoli",
       "handle": "@DavidSassoli",
-      "tweets": 449
+      "tweets": 449,
+      "cluster": 0,
+      "cluster_distances": [
+        0.016356349255700408,
+        0.4622573093494487,
+        0.3010658393008441,
+        0.2203205020940068
+      ]
     },
     {
       "name": "Federico Pizzarotti",
       "handle": "@FedePizzarotti",
-      "tweets": 253
+      "tweets": 253,
+      "cluster": 0,
+      "cluster_distances": [
+        0.017173772834757538,
+        0.4603632824921395,
+        0.3012014595733179,
+        0.221261485099785
+      ]
     },
     {
       "name": "Anna Finocchiaro",
       "handle": "@FinocchiaroAnna",
-      "tweets": 94
+      "tweets": 94,
+      "cluster": 0,
+      "cluster_distances": [
+        0.013601434642751544,
+        0.4622655415679597,
+        0.3023857353128885,
+        0.22174728847640032
+      ]
     },
     {
       "name": "Giancarlo Cancelleri",
       "handle": "@GiancarloCanc",
-      "tweets": 14
+      "tweets": 14,
+      "cluster": 0,
+      "cluster_distances": [
+        0.0140569179266524,
+        0.4611654996511289,
+        0.3022471785755097,
+        0.2225304038467091
+      ]
     },
     {
       "name": "Giovanna Melandri",
       "handle": "@GioMelandri",
-      "tweets": 998
+      "tweets": 998,
+      "cluster": 0,
+      "cluster_distances": [
+        0.08537226119634253,
+        0.4188252151269224,
+        0.2812035326816854,
+        0.21459899099504984
+      ]
     },
     {
       "name": "Giulia Sarti",
       "handle": "@GiuliaSarti86",
-      "tweets": 15
+      "tweets": 15,
+      "cluster": 0,
+      "cluster_distances": [
+        0.013918768201234867,
+        0.4613657166488505,
+        0.302275767793101,
+        0.22243974735681377
+      ]
     },
     {
       "name": "Manilo Di Stefano",
       "handle": "@ManlioDS",
-      "tweets": 438
+      "tweets": 438,
+      "cluster": 0,
+      "cluster_distances": [
+        0.03257574115926904,
+        0.45438824866569744,
+        0.29635122486119103,
+        0.21668478531384253
+      ]
     },
     {
       "name": "Nicola Morra",
       "handle": "@NicolaMorra63",
-      "tweets": 1034
+      "tweets": 1034,
+      "cluster": 0,
+      "cluster_distances": [
+        0.02811130511374378,
+        0.4614490061590509,
+        0.29778947153946106,
+        0.2126502171877443
+      ]
     },
     {
       "name": "Paola Taverna",
       "handle": "@PaolaTavernaM5S",
-      "tweets": 7
+      "tweets": 7,
+      "cluster": 0,
+      "cluster_distances": [
+        0.014104125197266584,
+        0.4611807942305069,
+        0.3022393683118229,
+        0.22247571226040352
+      ]
     },
     {
       "name": "Pierferdinando Casini",
       "handle": "@Pierferdinando",
-      "tweets": 65
+      "tweets": 65,
+      "cluster": 0,
+      "cluster_distances": [
+        0.01496888905838067,
+        0.46155231556502274,
+        0.3022488336990918,
+        0.22122996167750475
+      ]
     },
     {
       "name": "Roberto Fico",
       "handle": "@Roberto_Fico",
-      "tweets": 204
+      "tweets": 204,
+      "cluster": 0,
+      "cluster_distances": [
+        0.01719108747608341,
+        0.4609644717551487,
+        0.30120042354797305,
+        0.22064401722079469
+      ]
     },
     {
       "name": "Mario Monti",
       "handle": "@SenatoreMonti",
-      "tweets": 43
+      "tweets": 43,
+      "cluster": 0,
+      "cluster_distances": [
+        0.01412511099288989,
+        0.4612610471869575,
+        0.3023053008830282,
+        0.22230854093712443
+      ]
     },
     {
       "name": "Francesco Storace",
       "handle": "@Storace",
-      "tweets": 6588
+      "tweets": 6588,
+      "cluster": 1,
+      "cluster_distances": [
+        0.3114652051420932,
+        0.0,
+        0.35822762563220784,
+        0.3303071692256989
+      ]
     },
     {
       "name": "Vittorio Sgarbi",
       "handle": "@VittorioSgarbi",
-      "tweets": 601
+      "tweets": 601,
+      "cluster": 0,
+      "cluster_distances": [
+        0.028457881785089345,
+        0.4553697178452827,
+        0.297203070331658,
+        0.21896933003797006
+      ]
     },
     {
       "name": "Alessandro Di Battista",
       "handle": "@ale_dibattista",
-      "tweets": 117
+      "tweets": 117,
+      "cluster": 0,
+      "cluster_distances": [
+        0.014155105630060122,
+        0.4621870149912324,
+        0.3022292674097429,
+        0.22142861196896463
+      ]
     },
     {
       "name": "Andrea Orlando",
       "handle": "@andreaorlandosp",
-      "tweets": 935
+      "tweets": 935,
+      "cluster": 0,
+      "cluster_distances": [
+        0.05435943987241634,
+        0.44437689196368696,
+        0.28971701913883185,
+        0.21154664902506481
+      ]
     },
     {
       "name": "Angelino Alfano",
       "handle": "@angealfa",
-      "tweets": 229
+      "tweets": 229,
+      "cluster": 0,
+      "cluster_distances": [
+        0.01438691172656534,
+        0.4621553198155094,
+        0.30226773670943713,
+        0.2211900317484881
+      ]
     },
     {
       "name": "Anna Paola Concia",
       "handle": "@annapaolaconcia",
-      "tweets": 971
+      "tweets": 971,
+      "cluster": 0,
+      "cluster_distances": [
+        0.02798091387925613,
+        0.4562439025118855,
+        0.2976572421597498,
+        0.21811794144910857
+      ]
     },
     {
       "name": "Antonello De Pierro",
       "handle": "@antondepierro",
-      "tweets": 150
+      "tweets": 150,
+      "cluster": 0,
+      "cluster_distances": [
+        0.023485658419754415,
+        0.45704881904394745,
+        0.2993364963179083,
+        0.22012902621838995
+      ]
     },
     {
       "name": "Barbara Lezzi",
       "handle": "@barbaralezzi",
-      "tweets": 111
+      "tweets": 111,
+      "cluster": 0,
+      "cluster_distances": [
+        0.01378827963733558,
+        0.4623905979009248,
+        0.30240382741479005,
+        0.22141729504694965
+      ]
     },
     {
       "name": "Beppe Grillo",
       "handle": "@beppe_grillo",
-      "tweets": 945
+      "tweets": 945,
+      "cluster": 0,
+      "cluster_distances": [
+        0.04058762888767896,
+        0.451581211734158,
+        0.2946577250846777,
+        0.21317343429348531
+      ]
     },
     {
       "name": "Carla Ruocco",
       "handle": "@carlaruocco1",
-      "tweets": 1031
+      "tweets": 1031,
+      "cluster": 0,
+      "cluster_distances": [
+        0.04040231330609002,
+        0.4545910576394894,
+        0.29315260088810774,
+        0.2118540281663129
+      ]
     },
     {
       "name": "Carlo Martelli",
       "handle": "@carlo_martelli",
-      "tweets": 2459
+      "tweets": 2459,
+      "cluster": 0,
+      "cluster_distances": [
+        0.08349024125831188,
+        0.4342394698979036,
+        0.28269611139840967,
+        0.1995741774453748
+      ]
     },
     {
       "name": "C\u00e8cile Kyenge",
       "handle": "@ckyenge",
-      "tweets": 1302
+      "tweets": 1302,
+      "cluster": 0,
+      "cluster_distances": [
+        0.062358256966626405,
+        0.4385505698032055,
+        0.2868935636677357,
+        0.2121976095624323
+      ]
     },
     {
       "name": "Lara Comi",
       "handle": "@comilara",
-      "tweets": 936
+      "tweets": 936,
+      "cluster": 0,
+      "cluster_distances": [
+        0.03392701869027976,
+        0.45513394708027005,
+        0.2941542418722976,
+        0.21678479235715253
+      ]
     },
     {
       "name": "Corrado Passera",
       "handle": "@corradopassera",
-      "tweets": 2
+      "tweets": 2,
+      "cluster": 0,
+      "cluster_distances": [
+        0.014200238646460875,
+        0.46104535901557697,
+        0.30221215169643745,
+        0.22254225064152472
+      ]
     },
     {
       "name": "Dario Franceschini",
       "handle": "@dariofrance",
-      "tweets": 261
+      "tweets": 261,
+      "cluster": 0,
+      "cluster_distances": [
+        0.017862000226132026,
+        0.4599692544165296,
+        0.30142770690847037,
+        0.220741038448868
+      ]
     },
     {
       "name": "Luigi De Magistris",
       "handle": "@demagistris",
-      "tweets": 48
+      "tweets": 48,
+      "cluster": 0,
+      "cluster_distances": [
+        0.013682502885570526,
+        0.4617468359159079,
+        0.3023810576512941,
+        0.22218960354722736
+      ]
     },
     {
       "name": "Daniela Santanch\u00e8",
       "handle": "@dsantanche",
-      "tweets": 559
+      "tweets": 559,
+      "cluster": 0,
+      "cluster_distances": [
+        0.031192976488285062,
+        0.4573782874363599,
+        0.29497451182858475,
+        0.21645422424677027
+      ]
     },
     {
       "name": "Enrico Letta",
       "handle": "@enricoletta",
-      "tweets": 321
+      "tweets": 321,
+      "cluster": 0,
+      "cluster_distances": [
+        0.021703463964149752,
+        0.4582268171911717,
+        0.2997716754132367,
+        0.22029804343144188
+      ]
     },
     {
       "name": "Maurizio Gasparri",
       "handle": "@gasparripdl",
-      "tweets": 4315
+      "tweets": 4315,
+      "cluster": 0,
+      "cluster_distances": [
+        0.11857994077170644,
+        0.41015574348526307,
+        0.26860627649862145,
+        0.20265803924440917
+      ]
     },
     {
       "name": "Ignazio Messina",
       "handle": "@i_messina",
-      "tweets": 411
+      "tweets": 411,
+      "cluster": 0,
+      "cluster_distances": [
+        0.04219724887951071,
+        0.44709392422075944,
+        0.294036258774299,
+        0.21667256812543081
+      ]
     },
     {
       "name": "Ignazio Marino",
       "handle": "@ignaziomarino",
-      "tweets": 63
+      "tweets": 63,
+      "cluster": 0,
+      "cluster_distances": [
+        0.014553877122396168,
+        0.4612938309815908,
+        0.30204841033445434,
+        0.22210388156155875
+      ]
     },
     {
       "name": "Laura Boldrini",
       "handle": "@lauraboldrini",
-      "tweets": 1062
+      "tweets": 1062,
+      "cluster": 0,
+      "cluster_distances": [
+        0.041968466222976224,
+        0.4514220839532346,
+        0.29382946463278853,
+        0.21277998519100053
+      ]
     },
     {
       "name": "Luigi Di Maio",
       "handle": "@luigidimaio",
-      "tweets": 379
+      "tweets": 379,
+      "cluster": 0,
+      "cluster_distances": [
+        0.01604352939079969,
+        0.46378037633367264,
+        0.3013233586571231,
+        0.21885273561840454
+      ]
     },
     {
       "name": "Magdi Cristiano Allam",
       "handle": "@magdicristiano",
-      "tweets": 640
+      "tweets": 640,
+      "cluster": 0,
+      "cluster_distances": [
+        0.05147802894423568,
+        0.4432648517216401,
+        0.2895925218186064,
+        0.2156645975155179
+      ]
     },
     {
       "name": "Mara Carfagna",
       "handle": "@mara_carfagna",
-      "tweets": 378
+      "tweets": 378,
+      "cluster": 0,
+      "cluster_distances": [
+        0.018640464394909392,
+        0.4616781290744838,
+        0.30095472421474195,
+        0.2187266823158648
+      ]
     },
     {
       "name": "Matteo Renzi",
       "handle": "@matteorenzi",
-      "tweets": 630
+      "tweets": 630,
+      "cluster": 0,
+      "cluster_distances": [
+        0.03303298172450205,
+        0.45454171614077343,
+        0.2959188192981502,
+        0.2165064828365742
+      ]
     },
     {
       "name": "Matteo Salvini",
       "handle": "@matteosalvinimi",
-      "tweets": 4453
+      "tweets": 4453,
+      "cluster": 2,
+      "cluster_distances": [
+        0.26289492466207937,
+        0.4654101719757296,
+        1.539905563060268e-08,
+        0.27169488796313546
+      ]
     },
     {
       "name": "Michele Emiliano",
       "handle": "@micheleemiliano",
-      "tweets": 2783
+      "tweets": 2783,
+      "cluster": 0,
+      "cluster_distances": [
+        0.08890232065436733,
+        0.4290520154553843,
+        0.27944319320395045,
+        0.202602470686298
+      ]
     },
     {
       "name": "Mariastella Gelmini",
       "handle": "@msgelmini",
-      "tweets": 312
+      "tweets": 312,
+      "cluster": 0,
+      "cluster_distances": [
+        0.019075541241395388,
+        0.4624955011501303,
+        0.30008769805632185,
+        0.21834125955215253
+      ]
     },
     {
       "name": "Michela Vittoria Brambilla",
       "handle": "@mvbrambilla",
-      "tweets": 473
+      "tweets": 473,
+      "cluster": 0,
+      "cluster_distances": [
+        0.05081782266295082,
+        0.4432701817416391,
+        0.2900864868787987,
+        0.21582550871661135
+      ]
     },
     {
       "name": "Nicola Zingaretti",
       "handle": "@nzingaretti",
-      "tweets": 782
+      "tweets": 782,
+      "cluster": 0,
+      "cluster_distances": [
+        0.03807013252932465,
+        0.45040789236356255,
+        0.29488691111694787,
+        0.21663506399016483
+      ]
     },
     {
       "name": "Renato Brunetta",
       "handle": "@renatobrunetta",
-      "tweets": 4425
+      "tweets": 4425,
+      "cluster": 3,
+      "cluster_distances": [
+        0.21421806166480706,
+        0.4811535533456149,
+        0.304628384989578,
+        0.0
+      ]
     },
     {
       "name": "Renato Soru",
       "handle": "@renatosoru",
-      "tweets": 17
+      "tweets": 17,
+      "cluster": 0,
+      "cluster_distances": [
+        0.013928937088472593,
+        0.4613083223432014,
+        0.3022480358903088,
+        0.22251470467801712
+      ]
     },
     {
       "name": "Roberta Lombardi",
       "handle": "@robertalombardi",
-      "tweets": 95
+      "tweets": 95,
+      "cluster": 0,
+      "cluster_distances": [
+        0.014290768509222063,
+        0.4615386578107108,
+        0.3021177356231484,
+        0.2220528380569187
+      ]
     },
     {
       "name": "Rosario Crocetta",
       "handle": "@rosariocrocetta",
-      "tweets": 346
+      "tweets": 346,
+      "cluster": 0,
+      "cluster_distances": [
+        0.03366826521469444,
+        0.45160979464912426,
+        0.2961545142731997,
+        0.21856742586298147
+      ]
     },
     {
       "name": "Enrico Rossi",
       "handle": "@rossipresidente",
-      "tweets": 608
+      "tweets": 608,
+      "cluster": 0,
+      "cluster_distances": [
+        0.0343422725066193,
+        0.45457905778382596,
+        0.2956887545736278,
+        0.2153899151359269
+      ]
     },
     {
       "name": "Debora Serracchiani",
       "handle": "@serracchiani",
-      "tweets": 960
+      "tweets": 960,
+      "cluster": 0,
+      "cluster_distances": [
+        0.05603598408904796,
+        0.4420757237984882,
+        0.29007767936518924,
+        0.2118106127472746
+      ]
     },
     {
       "name": "Umberto Ambrosoli",
       "handle": "@uambrosoli",
-      "tweets": 606
+      "tweets": 606,
+      "cluster": 0,
+      "cluster_distances": [
+        0.02240322743333119,
+        0.4597776769511228,
+        0.29975170029923986,
+        0.2180673953163062
+      ]
     },
     {
       "name": "Vincenzo De Luca",
       "handle": "@vincenzodeluca",
-      "tweets": 439
+      "tweets": 439,
+      "cluster": 0,
+      "cluster_distances": [
+        0.023047758611852976,
+        0.45820460066508945,
+        0.2994592997736607,
+        0.21928834094939692
+      ]
     },
     {
       "name": "Vito Crimi",
       "handle": "@vitocrimi",
-      "tweets": 76
+      "tweets": 76,
+      "cluster": 0,
+      "cluster_distances": [
+        0.013932003613800365,
+        0.4617343850708509,
+        0.3022655123098709,
+        0.22206809900547772
+      ]
     },
     {
       "name": "Luca Zaia",
       "handle": "@zaiapresidente",
-      "tweets": 394
+      "tweets": 394,
+      "cluster": 0,
+      "cluster_distances": [
+        0.02222285660676837,
+        0.45941488484253973,
+        0.29907234793139004,
+        0.2192899106193019
+      ]
     }
   ],
   "edges": [
