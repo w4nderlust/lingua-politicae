@@ -185,13 +185,23 @@ print(sorted(similarity_matrix.items(), key=lambda x: -x[1]))
 
 print('similarity matrix scores distribution:')
 scores = np.array([v for v in similarity_matrix.values()])
-max_scores = np.max(scores)
 min_scores = np.min(scores)
+percentile10_scores = np.percentile(scores, 10)
+percentile25_scores = np.percentile(scores, 25)
 mean_scores = np.mean(scores)
-std_scores = np.std(scores)
 median_scores = np.median(scores)
-print("{} | min: {:0.4f}, mean: {:0.4f}, median: {:0.4f}, max: {:0.4f}, std: {:0.4f}".format(
-    cli_hist(scores), min_scores, mean_scores, median_scores, max_scores, std_scores))
+percentile75_scores = np.percentile(scores, 75)
+percentile90_scores = np.percentile(scores, 90)
+max_scores = np.max(scores)
+std_scores = np.std(scores)
+frequency, values = np.histogram(scores, bins=10)
+print(cli_hist(scores))
+print(frequency.tolist())
+print(["{:0.4f}".format(v) for v in values])
+print(
+    "min: {:0.4f}, 10th: {:0.4f}, 25th: {:0.4f}, mean: {:0.4f}, median: {:0.4f}, 75th: {:0.4f}, 90th: {:0.4f}, max: {:0.4f}, std: {:0.4f}".format(
+        min_scores, percentile10_scores, percentile25_scores, mean_scores,
+        median_scores, percentile75_scores, percentile90_scores, max_scores, std_scores))
 
 # Building politicians graph
 print("Building politicians graph...")

@@ -2,7 +2,6 @@
 const THRESHOLD = 0.1;
 const THRESHOLD_1 = 0.3;
 const THRESHOLD_2 = 0.5;
-
 // DATA
 var graph;
 var currentGraph;
@@ -27,16 +26,15 @@ var tooltip = d3.select("body")
 // SCALES
 // var dashScale = d3.scaleQuantize().domain([THRESHOLD_1, THRESHOLD_2, 1]).range(["5,5","5,10","5,20"]);
 // var color = d3.scaleOrdinal(d3.schemeCategory20);
-var radiusScale = d3.scaleLinear().range([10,50]);
-var opacityScale = d3.scaleLinear().range([0,1]);
-var strokeScale = d3.scaleLinear().range([1,5]);
-var distanceScale = d3.scaleLinear().range([300,0]); // lighter weight correspond to higher distances
+var radiusScale = d3.scaleSqrt().clamp(true).range([10,40]);
+var opacityScale = d3.scaleLinear().clamp(true).range([0.2,1]);
+var strokeScale = d3.scaleLinear().clamp(true).range([1,5]);
+var distanceScale = d3.scaleLinear().clamp(true).range([400,50]); // lighter weight correspond to higher distances
 
 // PHYSICS
 var simulation;
 
 var link, node, text;
-
 
 
 // FUNCTIONS
@@ -51,10 +49,18 @@ function onLoaded(error, data) {
 	// sort names alphabetically
 	graph.nodes.sort((a, b) => a.name !== b.name ? a.name < b.name ? -1 : 1 : 0);
 	// update scales
-	distanceScale.domain(d3.extent(graph.edges, (d)=>d.weight));
+	regular_extent = d3.extent(graph.edges, (d)=>d.weight)
+	sorted_weights = graph.edges.map((d)=>d.weight).sort()
+	quantile_extent = [d3.quantile(sorted_weights, 0.05), d3.quantile(sorted_weights, 0.95)]
+
+	//distanceScale.domain(d3.extent(graph.edges, (d)=>d.weight));
+	distanceScale.domain(quantile_extent);
+	//strokeScale.domain(d3.extent(graph.edges, (d)=>d.weight));
+	strokeScale.domain(quantile_extent);
+	//opacityScale.domain(d3.extent(graph.edges, (d)=>d.weight));
+	opacityScale.domain(quantile_extent);
+
 	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
-	opacityScale.domain(d3.extent(graph.edges, (d)=>d.weight));
-	strokeScale.domain(d3.extent(graph.edges, (d)=>d.weight));
 
 	currentGraph = {};
 	currentGraph.nodes = [];
@@ -155,11 +161,10 @@ function updateGraph() {
 	.append("line")
 	.attr("class", "link")
 	.attr("stroke-width", (d)=>strokeScale(d.weight)) //(d)=> (d.weight > THRESHOLD_1? 1:1.5))
+	.style("stroke-opacity", (d)=> opacityScale(d.weight))
 	.on("mouseover", (d)=>updateEdgeTooltip(d))
 	.on("mousemove", ()=>tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"))
 	.on("mouseout", (d)=>updateEdgeTooltip(null));
-
-	// .style("stroke-opacity", 1)//(d)=> opacityScale(d.weight))
 	// .attr("stroke-dasharray", (d)=> (d.weight > THRESHOLD_1 ? dashScale(d.weight) : 0 ));
 
 	link
@@ -197,6 +202,7 @@ function updateGraph() {
 	.enter()
 	.append("text")
 	.attr("text-anchor", "middle")
+	.attr("fill", "black")
 	.text((d)=> d.name);
 
 	text
