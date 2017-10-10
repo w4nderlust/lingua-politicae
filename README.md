@@ -15,14 +15,40 @@ In the forseable future we would make the python code into a service and the jav
 Install
 -------
 
-install the requirements, possibly in python3 virtual environment,  with `pip`:
+Clone the repo:
 
-> pip install -r requirements.txt
+    git clone git@github.com:w4nderlust/lingua-politicae.git
 
-Once you have done so you can run `tweet2graph.py`, that will use the json tiles in data containing tweets in order to greate `politicians_graph.json`. It will contain all the informations needed by the javascript script to visualize it in the browser.
+Create and activate a python3 virtual environment:
 
-Start a webserver in the directory with:
+    virtualenv venv -p python3
+    source venv/bin/activate
 
-> python -m http.server
+Install the requirements with `pip`:
 
-Connect to the address returned by the command, usually `http://localhost:8888` and you will be able to visualize the graph of the politicians.
+    pip install -r lingua-politicae/requirements.txt
+
+Install `tweetokenize` from this [repo](https://github.com/w4nderlust/tweetokenize):
+
+    git clone git@github.com:w4nderlust/tweetokenize.git
+    cd tweetokenize
+    python setup.py install
+    cd ..
+
+
+Run
+---
+
+After completing the installation, enter `lingua-politicae` dir, activate you virtualenv if it's not already active and run `tweet2graph.py`:
+
+    cd lingua-politicae
+    source venv/bin/activate
+    python weet2graph.py
+
+It will use the json files containing tweets in `data` in order to greate `politicians_graph.json`. This json file wil be created inside `xiz` and  will contain all the informations needed by the javascript script to visualize it in the browser.
+
+Start a webserver in the `viz` directory with:
+
+    python -m http.server
+
+Connect to the address returned by the command, usually `http://localhost:8000` and you will be able to visualize the graph of the politicians.
