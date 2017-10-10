@@ -43,8 +43,9 @@
       .attr("width", width)
       .attr("height", height);
 
-      const dataA = data.nodes.slice(0, Math.floor(data.nodes.length/2))
-      const dataB = data.nodes.slice(Math.ceil(data.nodes.length/2))
+      data.nodes.forEach((d,i)=>d.id=i);
+      const dataA = data.nodes.slice(0, Math.floor(data.nodes.length/2));
+      const dataB = data.nodes.slice(Math.ceil(data.nodes.length/2));
 
       var groups = svg
       .selectAll(".cell")
@@ -56,7 +57,6 @@
 
         const el = d3.select(this);
 
-
         el
         .selectAll("rect")
         .data(dataB)
@@ -67,15 +67,11 @@
         .attr("height", CELL_SIZE)
         .attr("x", (d,i)=>i*CELL_SIZE)
         .attr("y", (d,i)=>index*CELL_SIZE )
-        .style("fill",(d,i)=> i==index ? "#000" : getColor(getWeight(index, i)/quantile_extent[1]))
+        .style("fill",(d,i)=> i==index ? "red" : getColor(getWeight(d.id, dd.id)/quantile_extent[1]))
         //d3.interpolateBlues(getWeight(index, i)/quantile_extent[1]))
         .on("mouseover", (d)=>updateEdgeTooltip(dd, d))
         .on("mousemove", ()=>tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"))
         .on("mouseout", (d)=>updateEdgeTooltip(null));
-
-
-
-
       });
 
       function getWeight(i,ii){

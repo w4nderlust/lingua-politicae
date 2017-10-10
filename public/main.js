@@ -9,10 +9,9 @@ var currentGraph;
 
 // NODES
 var svg = d3.select("svg");
-var width = window.document.body.clientWidth;
+var width = window.document.body.clientWidth*.7;
 var height = window.document.body.clientHeight;
 svg.attr("height", height);
-svg.attr("width", width);
 var edgesCont = svg.append("g");
 var nodesCont = svg.append("g");
 
@@ -103,7 +102,7 @@ function addNode(d) {
 	currentGraph.nodes.push(graph.nodes[index]);
 }
 
-function findEdges() {
+function setEdges() {
 	currentGraph.edges = [];
 	for (var k = 0; k < currentGraph.nodes.length; k++) {
 		var nodeIndex = currentGraph.nodes[k].id;
@@ -189,7 +188,7 @@ function initUI() {
 
 
 function updateGraph() {
-	findEdges();
+	setEdges();
 	currentGraph.edges = currentGraph.edges.filter((d)=> d.weight > thresholds[0]);
 	currentGraph.edges = currentGraph.edges.filter((d)=> d.weight < thresholds[1]);
 
@@ -349,11 +348,12 @@ function changeThreshold(index, value) {
 function setupSlider(extent, updateGraph, color){
 
 	var sliderVals = extent;
-	var width = +d3.select("#sidebar").node().getBoundingClientRect().width*.8;
+	var width = +d3.select("#sidebar").node().getBoundingClientRect().width*.7;
 
 	var svg = d3.select("#slider1").append("svg")
 	.attr('width', width)
-	.attr('height', 50);
+	.attr('height', 50)
+	.attr("transform", "translate(-10,0)");
 
 	var x = d3.scaleLinear()
 	.domain(extent)
