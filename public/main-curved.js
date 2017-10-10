@@ -212,6 +212,8 @@ function initUI() {
 
 function updateGraph() {
 	setEdges();
+	currentGraph.edges = currentGraph.edges.filter((d)=> d.weight > thresholds[0]);
+	currentGraph.edges = currentGraph.edges.filter((d)=> d.weight < thresholds[1]);
 	currentGraph.bilinks = currentGraph.bilinks.filter((d)=> d.weight > thresholds[0]);
 	currentGraph.bilinks = currentGraph.bilinks.filter((d)=> d.weight < thresholds[1]);
 
@@ -312,7 +314,7 @@ function ticked() {
 
 	svg.selectAll("text")
 	.attr("x", (d)=>d.x)
-	.attr("y", (d)=>d.y);
+	.attr("y", (d)=>d.y+radiusScale(d.tweets) + 10);
 
 }
 
