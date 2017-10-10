@@ -223,7 +223,7 @@ t0 = time()
 
 politician_vectors = []
 for politician in politicians_sorted:
-    politician_vectors.append(politician_proto[politician])
+    politician_vectors.append(politician_proto[politician] / np.linalg.norm(politician_proto[politician]))
 politicians_matrix = np.stack(politician_vectors)
 
 quality_avgs = []
