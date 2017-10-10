@@ -23,9 +23,9 @@ tweet_files = ['matteosalvinimi', 'matteorenzi', 'micheleemiliano', 'beppe_grill
                'CorradinoMineo', 'robertalombardi', 'FedePizzarotti', 'NicolaMorra63', 'comilara', 'rosariocrocetta',
                'rossipresidente', 'carlaruocco1', 'GiuliaSarti86', 'vincenzodeluca', 'magdicristiano', 'zaiapresidente',
                'antondepierro', 'GiancarloCanc', 'barbaralezzi', 'ManlioDS', 'renatosoru', 'carlo_martelli']
-names_file = 'names.json'
-graph_file = 'politicians_graph.json'
-stopwords_file = 'italian_stopwords_big.txt'
+names_file = 'data/names.json'
+graph_file = 'viz/politicians_graph.json'
+stopwords_file = 'res/italian_stopwords_big.txt'
 tweet_stopwords = ['URL', 'ELLIPSIS', 'NUMBER', 'USERNAME']
 
 num_clusters_range = range(2, 15)
