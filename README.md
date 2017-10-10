@@ -1,13 +1,4 @@
 # lingua-politicae
-
-<<<<<<< HEAD
-#Data visualization
-The visualization is a force-directed graph. The nodes represent politician Twitter activity and the edges indicate the lexical proximity between them.
-
-#Run the visualization
-As the data is stored in a json file, you will need to run a webserver to run the application and not run into cross-origin requests problems.
-
-=======
 The goal of this project is to visualize ocial media data produced by politicians from different points of view.
 
 The first visualization we are working on represents each politician as a node in a graph and the weights of the strengh of their connection is proportional to how similar their use of language is on Twitter. It is inspired by [this visualization](https://trello-attachments.s3.amazonaws.com/59da8a7cce93f206776c1d12/59db53014b9d8b772ecfc033/6087102ce596d7f73e59771f8d5b62e6/lexical-distance-among-the-languages-of-europe-mid-size.png) of the lexical distance among different European languages.
@@ -60,4 +51,3 @@ Start a webserver in the `viz` directory with:
     python -m http.server
 
 Connect to the address returned by the command, usually `http://localhost:8000` and you will be able to visualize the graph of the politicians.
->>>>>>> 4705bb6dc31bdf79c96e57d0790c8a880a4d6cbb
