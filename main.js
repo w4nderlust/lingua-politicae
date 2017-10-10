@@ -31,6 +31,7 @@ var opacityScale = d3.scaleLinear().clamp(true).range([0.2,1]);
 var strokeScale = d3.scaleLinear().clamp(true).range([1,5]);
 var distanceScale = d3.scaleLinear().clamp(true).range([400,50]); // lighter weight correspond to higher distances
 
+var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 // PHYSICS
 var simulation;
 
@@ -182,7 +183,7 @@ function updateGraph() {
 	.on("mouseout", (d)=>updateTooltip(null))
 	.attr("class", "node")
 	.attr("r", (d)=> (radiusScale(d.tweets)))
-	.attr("fill", "red")
+	.attr("fill", (d)=>colorScale(d.cluster))
 	.style("fill-opacity", 1)
 	.call(d3.drag()
 		.on("start", dragstarted)
