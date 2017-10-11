@@ -95,6 +95,7 @@ function addNode(d) {
 }
 
 function setEdges() {
+
 	currentGraph.edges = [];
 	currentGraph.bilinks = [];
 
@@ -162,7 +163,6 @@ function initUI() {
 
 	d3.select("input#all")
 	.on("change", function(d) {
-
 		currentGraph.nodes = [].concat(graph.nodes);
 		currentGraph.edges = [].concat(graph.edges);
 		updateGraph();
@@ -211,25 +211,33 @@ function initUI() {
 
 
 function updateGraph() {
+
 	setEdges();
 	currentGraph.edges = currentGraph.edges.filter((d)=> d.weight > thresholds[0]);
 	currentGraph.edges = currentGraph.edges.filter((d)=> d.weight < thresholds[1]);
 	currentGraph.bilinks = currentGraph.bilinks.filter((d)=> d.weight > thresholds[0]);
 	currentGraph.bilinks = currentGraph.bilinks.filter((d)=> d.weight < thresholds[1]);
 
-	link = edgesCont.selectAll(".link")
-	.data(currentGraph.bilinks); 
+	link = edgesCont.selectAll(".linkContainer")
+	.data(currentGraph.bilinks, (d)=>d.a); // set the link array as the accessor
 
-	link
+	var linkContainer = link
 	.enter()
+	.append("g")
+	.attr("class", "linkContainer");
+
+	linkContainer
 	.append("path")
 	.attr("class", "link")
 	.attr("stroke-width", (d)=>strokeScale(d.weight)) 
-	.style("stroke-opacity", (d)=> opacityScale(d.weight))
-	.on("mouseover", (d)=>updateEdgeTooltip(d))
+	.style("stroke-opacity", (d)=> opacityScale(d.weight));
+
+	linkContainer
+	.append("path")
+	.attr("class", "linkHover")
+	.on("mouseover", function(d){updateEdgeTooltip(d3.select(this.parentElement).select(".link"), d);})
 	.on("mousemove", ()=>tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"))
-	.on("mouseout", (d)=>updateEdgeTooltip(null));
-	// .attr("stroke-dasharray", (d)=> (d.weight > thresholds[]_1 ? dashScale(d.weight) : 0 ));
+	.on("mouseout", function(){updateEdgeTooltip(d3.select(this.parentElement).select(".link"), null);});
 
 	link
 	.exit()
@@ -245,17 +253,16 @@ function updateGraph() {
 	.append("circle")
 	.on("mouseover", (d)=>updateTooltip(d))
 	.on("mousemove", ()=>tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"))
-	.on("mouseout", (d)=>updateTooltip(null))
+	.on("mouseout", ()=>updateTooltip(null))
 	.attr("class", "node")
 	.attr("r", (d)=> (d.isIntermediate ? 10 : radiusScale(d.tweets)))
 	.attr("fill", (d)=>d.isIntermediate? "blue":"red")
 	.style("fill-opacity", 1)
 	.on("mousedown", (d)=>{
-		console.log(d)
 		if(shiftPressed) {
 			setTimeout(()=>{
-				removeNode(d)
-				updateGraph()
+				removeNode(d);
+				updateGraph();
 			}, 100);
 		}
 	})
@@ -269,15 +276,16 @@ function updateGraph() {
 	.remove();
 
 
-	text = svg
-	.selectAll("text")
+	text = d3.select("body")
+	.selectAll(".nodeLabel")
 	.data(realNodes);
 
 	text
 	.enter()
-	.append("text")
-	.attr("text-anchor", "middle")
-	.attr("fill", "black")
+	.append("div")
+	.attr("class", "nodeLabel")
+	.append("p")
+	.style("transform", "translate(-50%,0)")
 	.text((d)=> d.name);
 
 	text
@@ -285,7 +293,7 @@ function updateGraph() {
 	.remove();
 
 	d3.selectAll("#sidebar #list input")
-	.attr("checked", (d)=>realNodes.indexOf(d)!=-1 ? true : null)
+	.attr("checked", (d)=>realNodes.indexOf(d)!=-1 ? true : null);
 
 	if(!simulation) {
 		simulation = d3.forceSimulation()
@@ -296,6 +304,7 @@ function updateGraph() {
 	}
 
 	simulation.nodes(currentGraph.nodes);
+	simulation.alpha(0.1);
 
 	simulation.force("link")
 	.links(currentGraph.edges);
@@ -305,16 +314,24 @@ function updateGraph() {
 
 
 function ticked() {
-	simulation.alpha(0.1)
-	svg.selectAll(".link")
-	.attr("d", positionLink)
+
+
+	var linkContainer = svg.selectAll(".linkContainer")
+	
+	linkContainer
+	.select(".link")
+	.attr("d", positionLink);
+
+	linkContainer
+	.select(".linkHover")
+	.attr("d", positionLink);
+
 	
 	svg.selectAll(".node")
-	.attr("transform", (d)=>"translate(" + d.x + "," + d.y + ")")
+	.attr("transform", (d)=>"translate(" + d.x + "," + d.y + ")");
 
-	svg.selectAll("text")
-	.attr("x", (d)=>d.x)
-	.attr("y", (d)=>d.y+radiusScale(d.tweets) + 10);
+	d3.select("body").selectAll(".nodeLabel")
+	.style("transform", (d)=>"translate(" + d.x + "px," + (d.y + radiusScale(d.tweets)) + "px)");
 
 }
 
@@ -346,13 +363,9 @@ function dragended(d) {
 	d.fy = null;
 }
 
-function updateEdgeTooltip(d) {
-	var t;
-	if(d) {
-		t = Math.round(d.weight * 100)/100;
-	} else {
-		t = "";
-	}
+function updateEdgeTooltip(el, d) {
+	el.classed("active", d ? true : null);
+	var t = d ? Math.round(d.weight * 100)/100 : "";
 	tooltip
 	.style("visibility", d !== null ? "visible" :"hidden")
 	.text(t);
@@ -459,13 +472,11 @@ function setupSlider(extent, updateGraph, color){
 	}
 
 	function endDrag(d){
-		updateThresholds(sliderVals[0],sliderVals[1])
-		// updateGraph();
+		updateThresholds(sliderVals[0],sliderVals[1]);
 	}
 
 }
 function updateThresholds(a,b) {
-
 	thresholds[0] = a;
 	thresholds[1] = b;
 	updateGraph();

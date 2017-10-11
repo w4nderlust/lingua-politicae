@@ -12,15 +12,38 @@
   }
   
   /* GRAPH */
-  svg .link {
+  svg .link, svg .linkHover {
     stroke: #999;
     fill:none;
   }
+  
+  svg .linkHover {
+    opacity:0;
+    cursor:pointer;
+    stroke-width: 20;
 
-  svg text {
-    pointer-events: none;
-    font-size: .5rem;
   }
+
+  svg .link.active {
+    opacity:1;
+    stroke:red;
+  }
+
+  .nodeLabel {
+    pointer-events: none;
+    position: absolute;
+    top:0;
+    font-size:.7rem;
+  }
+  .nodeLabel p {
+    margin:0;
+    padding:0;
+  }
+
+
+
+
+  
 
   /* SIDEBAR */
   #sidebarwrapper {
