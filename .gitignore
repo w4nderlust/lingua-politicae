@@ -107,3 +107,7 @@ ENV/
 # mypy
 .mypy_cache/
 .idea/
+
+public/politicians_graph.json
+
+viz/politicians_graph.json

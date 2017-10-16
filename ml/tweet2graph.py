@@ -28,6 +28,8 @@ graph_file = 'viz/politicians_graph.json'
 stopwords_file = 'res/italian_stopwords_big.txt'
 tweet_stopwords = ['URL', 'ELLIPSIS', 'NUMBER', 'USERNAME']
 
+terms_per_edge = 5
+
 num_clusters_range = range(2, 15)
 clustering_algorithm = KMeans
 clustering_quality_measure = calinski_harabaz_score
@@ -217,6 +219,52 @@ print(
         min_scores, percentile10_scores, percentile25_scores, mean_scores,
         median_scores, percentile75_scores, percentile90_scores, max_scores, std_scores))
 
+
+# Calculating terms per edge
+print("Calculating terms per edge...")
+t0 = time()
+terms_per_edge_matrix = {}
+for i in range(len(politicians_sorted)):
+    for j in range(i + 1, len(politicians_sorted)):
+        proto_politician_i = np.squeeze(np.asarray(politician_proto[politicians_sorted[i]]))
+        proto_politician_i /= np.linalg.norm(proto_politician_i)
+
+        proto_politician_j = np.squeeze(np.asarray(politician_proto[politicians_sorted[j]]))
+        proto_politician_j /= np.linalg.norm(proto_politician_j)
+
+        euclidean_distance = np.absolute(proto_politician_i - proto_politician_j)
+        sorted_word_ids = np.argsort(euclidean_distance)
+
+        sorted_proto_politician_i = proto_politician_i[sorted_word_ids]
+        sorted_proto_politician_j = proto_politician_j[sorted_word_ids]
+
+        words_used_by_politician_i = np.logical_not(sorted_proto_politician_i == 0)
+        words_used_by_politician_j = np.logical_not(sorted_proto_politician_i == 0)
+        words_used_by_both = np.logical_and(words_used_by_politician_i, words_used_by_politician_j)
+
+        filtered_sorted_word_ids = sorted_word_ids[words_used_by_both]
+
+        # min-max normalization
+        ed = euclidean_distance[filtered_sorted_word_ids]
+        ed_max = ed.max()
+        ed_min = ed.min()
+        euclidean_distance = 2 * (euclidean_distance - ed_min) / (ed_max - ed_min) - 1
+
+        most_similar_word_ids = filtered_sorted_word_ids[:terms_per_edge]
+        most_similar_weights = -euclidean_distance[most_similar_word_ids]
+        most_similar_words = [vocab[i] for i in most_similar_word_ids]
+        most_similar = list(zip(most_similar_words, most_similar_weights))
+
+        most_different_word_ids = filtered_sorted_word_ids[-terms_per_edge:]
+        most_different_weights = -euclidean_distance[most_different_word_ids]
+        most_different_words = [vocab[i] for i in most_different_word_ids]
+        most_different = list(zip(most_different_words, most_different_weights))
+
+        terms_per_edge_matrix[(politicians_sorted[i], politicians_sorted[j])] = {"most_similar": most_similar,
+                                                                                 "most_different": most_different}
+print("done in {:0.4f}s".format(time() - t0))
+
+
 # Calculating clusters and finding the best scoring number of them
 print("Calculating clustering...")
 t0 = time()
@@ -273,7 +321,8 @@ edges = []
 for i in range(len(politicians_sorted)):
     for j in range(i + 1, len(politicians_sorted)):
         edges.append({'source': i, 'target': j,
-                      'weight': similarity_matrix[(politicians_sorted[i], politicians_sorted[j])]})
+                      'weight': similarity_matrix[(politicians_sorted[i], politicians_sorted[j])],
+                      'words': terms_per_edge_matrix[(politicians_sorted[i], politicians_sorted[j])]})
 graph = {'nodes': nodes, 'edges': edges}
 print("done in {:0.4f}s".format(time() - t0))
 
