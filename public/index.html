@@ -14,6 +14,7 @@
   /* GRAPH */
   svg .link {
     stroke: #999;
+    fill:none;
   }
 
   svg text {
@@ -33,6 +34,7 @@
   }
 
   #sidebar{
+    font-size: .8rem;
     background: rgba(255, 255, 255, .2);
   }
 
@@ -40,34 +42,57 @@
     pointer-events: none;
     position: absolute;
     left:0;
-    width:25%;
+    width:70%;
     bottom:0;
     padding:2rem;
     font-size: 70%;
   }
 
+
+
 </style>
+
+<link rel="stylesheet" href="slider.css">
 </head>
+
+
 <body>
   <div id="sidebarwrapper">
     <div id="sidebar">
+
+      <h3>Link threshold</h3>
+      <div id="slider1"></div>
+
+      <h3>People</h3>
+
+      <input type="checkbox" id="all" />
+      <label for="all">Select all</label>
+
+      <br/>
+      <br/>
+
       <table>
         <thead style="text-align: left;">
+
           <th></th>
-          <th>Nome</th>
-          <th>tweet</th>
+          <th>Name</th>
+          <th>tweets</th>
+
         </thead>
-        <tbody id="list"></tbody>
+        <tbody id="list">
+
+
+        </tbody>
       </table>
     </div>
   </div>
-  
-  <div id="legenda">
-    Lo spessore dell'arco rappresenta la distanza lessicale tra ogni politico. <br/>La larghezza di ogni nodo rappresenta il numero di tweet.
-  </div>
-  <svg width="100%" height="100%"></svg>
-  <script src="https://d3js.org/d3.v4.min.js"></script>
 
+  <div id="legenda">
+    Lo spessore dell'arco rappresenta la distanza lessicale tra ogni politico. <br/>La larghezza di ogni nodo rappresenta il numero di tweet.<br/>Per eliminare un nodo click + shift.
+  </div>
+  <svg width="70%" height="100%"></svg>
+
+  <script src="d3.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
