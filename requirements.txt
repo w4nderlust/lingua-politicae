@@ -1,3 +1,12 @@
-numpy
-scikit-learn
-tabulate
+ascii-graph==1.4.3
+numpy==1.14.1
+pandas==0.22.0
+python-dateutil==2.6.1
+pytz==2018.3
+scikit-learn==0.19.1
+scipy==1.0.0
+selenium==3.9.0
+six==1.11.0
+tabulate==0.8.2
+tweetokenize==1.0.1
+Unidecode==1.0.22
