@@ -13,12 +13,12 @@ except:
 
 userCounter = 0
 
-start = datetime.datetime(2017, 9, 1)  # year, month, day
-end = datetime.datetime(2017, 9, 2)  # year, month, day
+start = datetime.datetime(2017, 1, 1)  # year, month, day
+end = datetime.datetime(2018, 2, 23)  # year, month, day
 
 # only edit these if you're having problems
 delay = 1  # time to wait on each page load before reading the page
-driver = webdriver.Safari()  # options are Chrome() Firefox() Safari()
+driver = webdriver.Chrome()  # options are Chrome() Firefox() Safari()
 
 days = (end - start).days + 1
 id_selector = '.time a.tweet-timestamp'
@@ -87,18 +87,17 @@ def getTweets(counter):
     
     print(' {} tweets by {}'.format(userTweetCount, user))
 
-    try:
-        with open(twitter_ids_filename) as f:
-            all_ids = ids + json.load(f)
-            data_to_write = list(set(all_ids))
-            print('total tweet count: ', len(data_to_write))
-    except FileNotFoundError:
-        with open(twitter_ids_filename, 'w') as f:
-            all_ids = ids
-            data_to_write = list(set(all_ids))
-            print('total tweet count: ', len(data_to_write))
+    j = None
+    
+    with open(twitter_ids_filename) as f:
+        try:
+            j = json.load(f)
+        except:
+            pass
 
     with open(twitter_ids_filename, 'w') as outfile:
+        all_ids = ids if not j else ids
+        data_to_write = list(set(all_ids))
         json.dump(data_to_write, outfile)
 
     counter += 1
