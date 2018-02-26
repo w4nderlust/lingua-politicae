@@ -22,6 +22,11 @@
     font-size: .5rem;
   }
 
+  #title {
+    position: absolute;
+    margin: 1.5rem 0 0 2rem ;
+  }
+
   /* SIDEBAR */
   #sidebarwrapper {
     height:90%;
@@ -57,16 +62,18 @@
 
 
 <body>
+
+  <h2 id="title">Distanza lessicale tra politici italiani su Twitter</h2>
   <div id="sidebarwrapper">
     <div id="sidebar">
 
-      <h3>Link threshold</h3>
+      <h3>Range di somiglianza lessicale</h3>
       <div id="slider1"></div>
 
-      <h3>People</h3>
+      <h3>Politici</h3>
 
       <input type="checkbox" id="all" />
-      <label for="all">Select all</label>
+      <label for="all">Seleziona tutto</label>
 
       <br/>
       <br/>
@@ -75,8 +82,8 @@
         <thead style="text-align: left;">
 
           <th></th>
-          <th>Name</th>
-          <th>tweets</th>
+          <th>Nome</th>
+          <th>Tweet</th>
 
         </thead>
         <tbody id="list">
@@ -88,7 +95,8 @@
   </div>
 
   <div id="legenda">
-    Lo spessore dell'arco rappresenta la distanza lessicale tra ogni politico. <br/>La larghezza di ogni nodo rappresenta il numero di tweet.<br/>Per eliminare un nodo click + shift.
+    La grandezza del cerchio rappresenta il numero di tweet<br/>
+    Lo spessore dell'arco rappresenta la somiglianza lessicale tra ogni politico.
   </div>
   <svg width="70%" height="100%"></svg>
 

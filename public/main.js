@@ -12,24 +12,27 @@ var svg = d3.select("svg");
 var width = window.document.body.clientWidth*.7;
 var height = window.document.body.clientHeight;
 svg.attr("height", height);
+svg.on("mousemove", updateTooltipPosition)
+
 var edgesCont = svg.append("g");
 var nodesCont = svg.append("g");
 
 // TOOLTIP
-var tooltip = d3.select("body")
-.append("div")
-.style("position", "absolute")
-.style("z-index", "10")
-.style("visibility", "hidden")
-.text("a simple tooltip");
+var tooltip = svg
+.append("text")
+.attr("text-anchor", "middle")
+.attr("id", "tooltip");
 
 // SCALES
-// var dashScale = d3.scaleQuantize().domain([thresholds[0], thresholds[1], 1]).range(["5,5","5,10","5,20"]);
-// var color = d3.scaleOrdinal(d3.schemeCategory20);
 var radiusScale = d3.scaleSqrt().clamp(true).range([10,40]);
 var opacityScale = d3.scaleLinear().clamp(true).range([0.2,1]);
 var strokeScale = d3.scaleLinear().clamp(true).range([1,5]);
 var distanceScale = d3.scaleLinear().clamp(true).range([400,100]); // lighter weight correspond to higher distances
+var colorScale = d3.scaleOrdinal()
+.range(["#FCDA1B", "#2D9DB4", "#299733", "#13487B", "#DE0016", "#151653", "#EB733F", "#DE0000", "black"])
+.domain(["M5S", "piùEuropa", "Lega Nord", "Forza Italia", "Potere Al Popolo",  "Fratelli d'Italia", "PD",  "Liberi e Uguali", "Casa Pound",  ])
+
+
 
 // PHYSICS
 var simulation;
@@ -39,6 +42,10 @@ var link, node, text;
 
 // FUNCTIONS
 function onLoaded(error, data) {
+
+	let partiti = {}
+	data.nodes.forEach(d=>{if(!partiti[d.partito]) partiti[d.partito]= d;})
+	console.log(Object.keys(partiti));
 
 	if (error) throw error;
 	graph = data;
@@ -66,13 +73,13 @@ function onLoaded(error, data) {
 
 
 
-	window.document.body.onkeydown = (d)=> {
-		shiftPressed = (d.code=="ShiftLeft" || d.code=="ShiftRight")
-	};
+	// window.document.body.onkeydown = (d)=> {
+	// 	shiftPressed = (d.code=="ShiftLeft" || d.code=="ShiftRight")
+	// };
 
-	window.document.body.onkeyup = (d)=> {
-		shiftPressed = false
-	};
+	// window.document.body.onkeyup = (d)=> {
+	// 	shiftPressed = false
+	// };
 
 	setupSlider(quantile_extent, updateThresholds);
 
@@ -113,6 +120,7 @@ function setEdges() {
 			if(g.source == nodeIndex && target) {
 				// I had to redo this because the id function of links wasn't working properly!
 				currentGraph.edges.push({
+					words: g.words,
 					weight: g.weight,
 					source: k,
 					target: currentGraph.nodes.indexOf(target)
@@ -195,15 +203,25 @@ function updateGraph() {
 	link = edgesCont.selectAll(".link")
 	.data(currentGraph.edges, (d)=>d.id); 
 
-	link
+	let linkGroups = link
 	.enter()
-	.append("line")
+	.append("g")
 	.attr("class", "link")
+	.on("mouseover", function(d){updateEdgeTooltip(d, d3.select(this).select(".realLink"))})
+	.on("mouseout", function(d){updateEdgeTooltip(null, d3.select(this).select(".realLink"))});
+
+	linkGroups
+	.append("line")
+	.attr("stroke-width", 10) 
+	.style("stroke-opacity", 0)
+
+
+	linkGroups
+	.append("line")
+	.attr("class", "realLink")
 	.attr("stroke-width", (d)=>strokeScale(d.weight)) 
 	.style("stroke-opacity", (d)=> opacityScale(d.weight))
-	.on("mouseover", (d)=>updateEdgeTooltip(d))
-	.on("mousemove", ()=>tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"))
-	.on("mouseout", (d)=>updateEdgeTooltip(null));
+
 	// .attr("stroke-dasharray", (d)=> (d.weight > thresholds[]_1 ? dashScale(d.weight) : 0 ));
 
 	link
@@ -216,12 +234,11 @@ function updateGraph() {
 	node
 	.enter()
 	.append("circle")
-	.on("mouseover", (d)=>updateTooltip(d))
-	.on("mousemove", ()=>tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"))
-	.on("mouseout", (d)=>updateTooltip(null))
+	.on("mouseover", function(d){updateTooltip(d, d3.select(this))})
+	.on("mouseout", function(d){updateTooltip(null, d3.select(this))})
 	.attr("class", "node")
 	.attr("r", (d)=> (radiusScale(d.tweets)))
-	.attr("fill", "red")
+	.attr("fill", d=>colorScale(d.partito))
 	.style("fill-opacity", 1)
 	.on("mousedown", (d)=>{
 		if(shiftPressed) {
@@ -243,15 +260,44 @@ function updateGraph() {
 
 
 	text = svg
-	.selectAll("text")
+	.selectAll(".label")
 	.data(currentGraph.nodes);
 
-	text
+	var labelGroup = text
 	.enter()
-	.append("text")
-	.attr("text-anchor", "middle")
-	.attr("fill", "black")
-	.text((d)=> d.name);
+	.append("g")
+	.attr("class", "label")
+	.each(function(d){
+	
+		var el = d3.select(this);
+	
+		var text = el
+		.append("text")
+		.attr("text-anchor", "middle")
+		.attr("fill", "black")
+		.text(d.name);
+	
+		var bbox = text.node().getBBox();
+		console.log(el);
+
+		el
+		.insert('rect',':first-child')
+		.attr("x", bbox.x)
+		.attr("y", bbox.y)
+		.attr("width", bbox.width)
+		.attr("height", bbox.height)
+		.attr("fill", "white");
+
+
+	})
+
+
+
+
+	
+
+	
+
 
 	text
 	.exit()
@@ -282,7 +328,7 @@ function updateGraph() {
 
 function ticked() {
 	simulation.alpha(0.1)
-	svg.selectAll(".link")
+	svg.selectAll(".link").selectAll("line")
 	.attr("x1", (d)=> d.source.x)
 	.attr("y1", (d)=> d.source.y)
 	.attr("x2", (d)=> d.target.x)
@@ -292,9 +338,8 @@ function ticked() {
 	.attr("cx", (d)=> d.x)
 	.attr("cy", (d)=> d.y);
 
-	svg.selectAll("text")
-	.attr("x", (d)=>d.x)
-	.attr("y", (d)=>d.y);
+	svg.selectAll(".label")
+	.attr("transform", d=>`translate(${d.x}, ${d.y})`)
 
 }
 
@@ -307,6 +352,7 @@ function dragstarted(d) {
 function dragged(d) {
 	d.fx = d3.event.x;
 	d.fy = d3.event.y;
+	updateTooltipPosition();
 }
 
 function dragended(d) {
@@ -315,28 +361,36 @@ function dragended(d) {
 	d.fy = null;
 }
 
-function updateEdgeTooltip(d) {
+function updateEdgeTooltip(d, el) {
 	var t;
 	if(d) {
-		t = Math.round(d.weight * 100)/100;
+		t = d.words.most_similar[0][0];
 	} else {
 		t = "";
 	}
+	el.attr("stroke", d ? "red" : "#999")
+
 	tooltip
 	.style("visibility", d !== null ? "visible" :"hidden")
-	.text(t);
+	.html(`<tspan x="0" dy="1.4em">Parola in comune più usata:</tspan><tspan x="0" dy="1.4em">${t}</tspan>`);
 }
 
-function updateTooltip(d) {
+function updateTooltip(d, el) {
 	var t;
 	if(d) {
 		t =d.tweets + " tweets";
 	} else {
 		t = "";
 	}
+	el.attr("stroke", d ? "black" : "none")
 	tooltip
 	.style("visibility", d !== null ? "visible" :"hidden")
 	.text(t);
+}
+
+
+function updateTooltipPosition(){
+	tooltip.attr("transform", `translate(${d3.event.x}, ${d3.event.y + 30})`);
 }
 
 function changeThreshold(index, value) {

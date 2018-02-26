@@ -13,16 +13,8 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
-# Inputs
-tweet_files = ['matteosalvinimi', 'matteorenzi', 'micheleemiliano', 'beppe_grillo', 'luigidimaio', 'ale_dibattista',
-               'andreaorlandosp', 'lauraboldrini', 'enricoletta', 'angealfa', 'VittorioSgarbi', 'SenatoreMonti',
-               'demagistris', 'ignaziomarino', 'dariofrance', 'serracchiani', 'nzingaretti', 'renatobrunetta',
-               'mara_carfagna', 'Pierferdinando', 'dsantanche', 'msgelmini', 'AlemannoTW', 'ckyenge', 'DavidSassoli',
-               'FinocchiaroAnna', 'gasparripdl', 'annapaolaconcia', 'uambrosoli', 'vitocrimi', 'mvbrambilla',
-               'corradopassera', 'PaolaTavernaM5S', 'Roberto_Fico', 'Storace', 'i_messina', 'GioMelandri',
-               'CorradinoMineo', 'robertalombardi', 'FedePizzarotti', 'NicolaMorra63', 'comilara', 'rosariocrocetta',
-               'rossipresidente', 'carlaruocco1', 'GiuliaSarti86', 'vincenzodeluca', 'magdicristiano', 'zaiapresidente',
-               'antondepierro', 'GiancarloCanc', 'barbaralezzi', 'ManlioDS', 'renatosoru', 'carlo_martelli']
+
+tweet_files = ['ale_dibattista_tweets','Antonio_Tajani_tweets','beppe_grillo_tweets','berlusconi_tweets','CarloCalenda_tweets','civati_tweets','distefanoTW_tweets','emmabonino_tweets','FusacchiA_tweets','gasparripdl_tweets','GiorgiaMeloni_tweets','GiovanniToti_tweets','GuidoCrosetto_tweets','Ignazio_LaRussa_tweets','lauraboldrini_tweets','luigidimaio_tweets','mara_carfagna_tweets','matteorenzi_tweets','matteosalvinimi_tweets','PaoloGentiloni_tweets','PietroGrasso_tweets','potere_alpopolo_tweets','renatobrunetta_tweets','Roberto_Fico_tweets']
 names_file = 'data/names.json'
 graph_file = 'viz/politicians_graph.json'
 stopwords_file = 'res/italian_stopwords_big.txt'
@@ -76,7 +68,7 @@ print("Collecting tweets...")
 t0 = time()
 tweets_so_far = 0
 for tweet_file in tweet_files:
-    with open("data/" + tweet_file + "_short.json") as tf:
+    with open("data/" + tweet_file + ".json") as tf:
         tweets = json.load(tf)
         for tweet in tweets:
             tweet_list.append(unidecode.unidecode(tweet['text']))
@@ -88,15 +80,6 @@ print("done in {:0.4f}s".format(time() - t0))
 # print(politician_tweets)
 
 # Collect politicion names
-print("Collecting politicion names...")
-t0 = time()
-with open(names_file) as nf:
-    politician2name = {}
-    names = json.load(nf)
-    for n in names:
-        politician2name[n["twitter"]] = n["name"].strip()
-
-print("done in {:0.4f}s".format(time() - t0))
 
 # Calculating tf-idf features
 print("Calculating vectorization...")
@@ -311,7 +294,7 @@ t0 = time()
 nodes = []
 for i, politician in enumerate(politicians_sorted):
     nodes.append(
-        {'name': politician2name[politician],
+        {'name': politician,
          'handle': politician,
          'tweets': len(politician_tweets[politician]),
          'cluster': np.asscalar(best_cluster_labels[i]),
