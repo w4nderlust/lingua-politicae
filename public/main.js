@@ -1,7 +1,9 @@
-/* jshint unused:true, esversion: 6 */	
 var thresholds = [0.001, 0.008];
 var shiftPressed = false;
+var selectedNode = null
 
+var PARTIES = ["M5S", "piùEuropa", "Lega Nord", "Forza Italia", "Potere Al Popolo",  "Fratelli d'Italia", "PD",  "Liberi e Uguali", "Casa Pound"];
+var PARTYCOLORS  = ["#FCDA1B", "#2D9DB4", "#299733", "#13487B", "#DE0016", "#151653", "#EB733F", "#DE0000", "black"];
 
 // DATA
 var graph;
@@ -9,28 +11,24 @@ var currentGraph;
 
 // NODES
 var svg = d3.select("svg");
-var width = window.document.body.clientWidth*.7;
+var width = window.document.body.clientWidth;
 var height = window.document.body.clientHeight;
 svg.attr("height", height);
 svg.on("mousemove", updateTooltipPosition)
 
-var edgesCont = svg.append("g");
+var edgesCont = svg.append("g").attr("id", "edgesCont");
 var nodesCont = svg.append("g");
 
 // TOOLTIP
-var tooltip = svg
-.append("text")
-.attr("text-anchor", "middle")
-.attr("id", "tooltip");
+var tooltip =d3.select("body").append("div").attr("id", "tooltip").style("visibility", "hidden");
 
 // SCALES
 var radiusScale = d3.scaleSqrt().clamp(true).range([10,40]);
-var opacityScale = d3.scaleLinear().clamp(true).range([0.2,1]);
 var strokeScale = d3.scaleLinear().clamp(true).range([1,5]);
-var distanceScale = d3.scaleLinear().clamp(true).range([400,100]); // lighter weight correspond to higher distances
+var distanceScale = d3.scaleLinear().clamp(true).range([width*.2,10]); // lighter weight correspond to higher distances
 var colorScale = d3.scaleOrdinal()
-.range(["#FCDA1B", "#2D9DB4", "#299733", "#13487B", "#DE0016", "#151653", "#EB733F", "#DE0000", "black"])
-.domain(["M5S", "piùEuropa", "Lega Nord", "Forza Italia", "Potere Al Popolo",  "Fratelli d'Italia", "PD",  "Liberi e Uguali", "Casa Pound",  ])
+.range(PARTYCOLORS)
+.domain(PARTIES)
 
 
 
@@ -58,38 +56,11 @@ function onLoaded(error, data) {
 	sorted_weights = graph.edges.map((d)=>d.weight).sort();
 	quantile_extent = [d3.quantile(sorted_weights, 0.05), d3.quantile(sorted_weights, 0.95)];
 	thresholds = quantile_extent;
-	// SLIDER 
-	// d3.select("#threshrangestart")
-	// .attr("value", 0.0)
-	// .attr("step", 0.01)
-	// .attr("max", thresholds[0]*1000)
-	// .on("input", function(){changeThreshold(0,this.value);});
-	
-	// d3.select("#threshrangeend")
-	// .attr("value", thresholds[1]*1000)
-	// .attr("step", 0.01)
-	// .attr("max", thresholds[1]*1000)
-	// .on("input", function(){changeThreshold(1,this.value);});
 
-
-
-	// window.document.body.onkeydown = (d)=> {
-	// 	shiftPressed = (d.code=="ShiftLeft" || d.code=="ShiftRight")
-	// };
-
-	// window.document.body.onkeyup = (d)=> {
-	// 	shiftPressed = false
-	// };
-
-	setupSlider(quantile_extent, updateThresholds);
-
-	// n.oninput = function(){console.log(this.value)}
-	// .on("mousedown", function(){console.log(this.value)})
-
+	// setupSlider(quantile_extent, updateThresholds);
 
 	distanceScale.domain(quantile_extent);
 	strokeScale.domain(quantile_extent);
-	opacityScale.domain(quantile_extent);
 
 	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
 
@@ -97,11 +68,15 @@ function onLoaded(error, data) {
 	currentGraph.nodes = [];
 	currentGraph.edges = [];
 
-	addNode(graph.nodes[0]);
-	addNode(graph.nodes[1]);
-	addNode(graph.nodes[2]);
-	initUI();
+	// initUI();
+	
+
+
+	d3.select("#selectAllLabel").select("input").property("checked", true)
+	currentGraph.nodes = graph.nodes;
+	currentGraph.edges = graph.edges;
 	updateGraph();
+
 }
 
 function addNode(d) {
@@ -129,6 +104,7 @@ function setEdges() {
 		}
 	}
 }
+
 function getNodeById(id) {
 	return currentGraph.nodes.filter((d)=>d.id == id)[0];
 }
@@ -140,29 +116,65 @@ function removeNode(d) {
 
 function initUI() {
 
-	d3.select("input#all")
+	let selectAllLabel = d3.select("#sidebar")
+	.append("label")
+	.attr("id", "selectAllLabel")
+	
+	selectAllLabel.append("input")
+	.attr("type", "checkbox")
 	.on("change", function(d) {
-		console.log("asdf")
-		currentGraph.nodes = [].concat(graph.nodes);
-		currentGraph.edges = [].concat(graph.edges);
+
+		currentGraph.nodes = [];
+		currentGraph.edges = [];
+
+		if(d3.select(this).node().checked) {
+			currentGraph.nodes = currentGraph.nodes.concat(graph.nodes);
+			currentGraph.edges = currentGraph.edges.concat(graph.edges);
+		} 
 		updateGraph();
 	});
-
-
-	var inputs = d3.select("#sidebar #list")
-	.selectAll("tr")
-	.data(graph.nodes)
-	.enter()
-	.append("tr");
-
 	
+	selectAllLabel
+	.append("span")
+	.text("Seleziona tutti");
+
+	// nest by parties
+	let parties = {};
+	let n = graph.nodes.forEach(d=>{
+		if(!parties[d.partito]) {
+			parties[d.partito] = [];
+		}
+		parties[d.partito].push(d);
+	});
+	parties = Object.keys(parties).map(d=>parties[d]);
 
 
-	inputs
-	.each(function(d){
+	var divs = d3.select("#sidebar")
+	.selectAll("div")
+	.data(parties)
+	.enter()
+	.append("div")
 
-		d3.select(this)
-		.append("td")
+	divs
+	.append("h4")
+	.text(d=>d[0].partito)
+	
+	let table = divs
+	.append("table");
+
+	table
+	.selectAll("tr")
+	.data(d=>Object.keys(d).map(dd=>d[dd]))
+	.enter()
+	.append("tr")
+
+	.each(function(d) {
+		let el = d3.select(this);
+		
+		
+		let label = el.append("label");
+
+		label
 		.append("input")
 		.attr("type", "checkbox")
 		.attr("id", (d)=>d.name)
@@ -173,29 +185,17 @@ function initUI() {
 			updateGraph();
 		});
 
-		d3.select(this)
-		.append("td")
-		.append("label")
-		.attr("for", d.name)
+
+		label
+		.append("span")
 		.text(d.name);
 
-		d3.select(this)
-		.append("td")
-		.append("label")
-		.text(d.tweets);
-
-
 	});
-
-
-
-
-	
 }
 
 
-
 function updateGraph() {
+
 	setEdges();
 	currentGraph.edges = currentGraph.edges.filter((d)=> d.weight > thresholds[0]);
 	currentGraph.edges = currentGraph.edges.filter((d)=> d.weight < thresholds[1]);
@@ -207,8 +207,9 @@ function updateGraph() {
 	.enter()
 	.append("g")
 	.attr("class", "link")
-	.on("mouseover", function(d){updateEdgeTooltip(d, d3.select(this).select(".realLink"))})
-	.on("mouseout", function(d){updateEdgeTooltip(null, d3.select(this).select(".realLink"))});
+	.style("opacity", .7)
+	.on("mouseover", function(d){updateEdgeTooltip(d, d3.select(this))})
+	.on("mouseout", function(d){updateEdgeTooltip(null, d3.select(this))});
 
 	linkGroups
 	.append("line")
@@ -220,9 +221,7 @@ function updateGraph() {
 	.append("line")
 	.attr("class", "realLink")
 	.attr("stroke-width", (d)=>strokeScale(d.weight)) 
-	.style("stroke-opacity", (d)=> opacityScale(d.weight))
 
-	// .attr("stroke-dasharray", (d)=> (d.weight > thresholds[]_1 ? dashScale(d.weight) : 0 ));
 
 	link
 	.exit()
@@ -242,13 +241,14 @@ function updateGraph() {
 	.style("fill-opacity", 1)
 	.on("mousedown", (d)=>{
 		if(shiftPressed) {
-
-			setTimeout(()=>{
-				removeNode(d)
-				updateGraph()
-			}, 100)
-		}
-	})
+			// setTimeout(()=>{
+				// 	removeNode(d)
+				// 	updateGraph()
+				// }, 100)
+			} else {
+				updateSelectedNode(d);
+			}
+		})
 	.call(d3.drag()
 		.on("start", dragstarted)
 		.on("drag", dragged)
@@ -268,35 +268,17 @@ function updateGraph() {
 	.append("g")
 	.attr("class", "label")
 	.each(function(d){
-	
+
 		var el = d3.select(this);
-	
+
 		var text = el
 		.append("text")
 		.attr("text-anchor", "middle")
 		.attr("fill", "black")
 		.text(d.name);
-	
-		var bbox = text.node().getBBox();
-		console.log(el);
-
-		el
-		.insert('rect',':first-child')
-		.attr("x", bbox.x)
-		.attr("y", bbox.y)
-		.attr("width", bbox.width)
-		.attr("height", bbox.height)
-		.attr("fill", "white");
-
 
 	})
 
-
-
-
-	
-
-	
 
 
 	text
@@ -309,7 +291,7 @@ function updateGraph() {
 	if(!simulation) {
 		simulation = d3.forceSimulation()
 		.force("link", d3.forceLink())
-		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets)))
+		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets)*2))
 		.force("center", d3.forceCenter(width / 2, height / 2))
 		.on("tick", ticked);
 	}
@@ -319,15 +301,38 @@ function updateGraph() {
 	simulation.force("link")
 	.links(currentGraph.edges)
 	.distance((d)=> {
-		return distanceScale(d.weight);
+		return distanceScale(d.weight) + 200;
 	});
+}
 
+function updateSelectedNode(d) {
+
+	d.selected = true;
+	selectedNode = d;
+
+	d3.selectAll(".link")
+	.each(function(d){
+		
+		let el = d3.select(this);
+
+		el.style("cursor",  edge=> edge.source.id == selectedNode.id ? "pointer" : "default");
+
+		el
+		.style("opacity", edge=> edge.source.id == selectedNode.id ? 1 : .7)
+
+		el	
+		.select(".realLink")
+		.style("stroke", edge=> edge.source.id == selectedNode.id ? colorScale(edge.source.partito) : "#ddd")
+
+		let node = el.node();
+		if( d.source.id == selectedNode.id) {
+			node.parentNode.appendChild(node)
+		}
+	})
 
 }
 
-
 function ticked() {
-	simulation.alpha(0.1)
 	svg.selectAll(".link").selectAll("line")
 	.attr("x1", (d)=> d.source.x)
 	.attr("y1", (d)=> d.source.y)
@@ -339,7 +344,7 @@ function ticked() {
 	.attr("cy", (d)=> d.y);
 
 	svg.selectAll(".label")
-	.attr("transform", d=>`translate(${d.x}, ${d.y})`)
+	.attr("transform", d=>`translate(${d.x}, ${d.y + radiusScale(d.tweets) + 10})`)
 
 }
 
@@ -362,35 +367,104 @@ function dragended(d) {
 }
 
 function updateEdgeTooltip(d, el) {
+
+	if(!selectedNode) return;
 	var t;
-	if(d) {
+
+	if(d && d.source.id == selectedNode.id) {
+
+		d3.selectAll("circle")
+		.attr("stroke", node=> node.id === d.target.id  || node.id === d.source.id  ? "black" : "none")
+		.attr("stroke-width", node=> node.id === d.target.id  || node.id === d.source.id  ? 3 :0);
+
+		console.log(el.node());
+		el
+		.select(".realLink")
+		.style("stroke", "black")
+
 		t = d.words.most_similar[0][0];
+
+		if(d.source.id == selectedNode.id) {
+
+			tooltip
+			.style("visibility", d !== null ? "visible" :"hidden")
+			
+			tooltip
+			.append("h3")
+			.text(`${d.source.name} – ${d.target.name} `)
+
+			tooltip
+			.append("h4")
+			.text("Parole in comune più usate")
+
+			tooltip
+			.append("p")
+			.text(d.words.most_similar.map(d=>d[0]).join(", "))
+			// .append("ul")
+			// .selectAll("li")
+			// .data(d.words.most_similar)
+			// .enter()
+			// .append("li")
+			// .text(d=>d[0]);
+
+			tooltip
+			.append("h4")
+			.text("Parole in comune meno usate")
+
+			tooltip
+			.append("p")
+			.text(d.words.most_different.map(d=>d[0]).join(", "))
+			// .append("ul")
+			// .selectAll("li")
+			// .data(d.words.most_different)
+			// .enter()
+			// .append("li")
+			// .text(d=>d[0]);
+
+
+
+		}
+
+
 	} else {
 		t = "";
-	}
-	el.attr("stroke", d ? "red" : "#999")
 
-	tooltip
-	.style("visibility", d !== null ? "visible" :"hidden")
-	.html(`<tspan x="0" dy="1.4em">Parola in comune più usata:</tspan><tspan x="0" dy="1.4em">${t}</tspan>`);
+		tooltip
+		.style("visibility", "hidden")
+		.html("");
+
+		d3.selectAll(".realLink")
+		.style("stroke", d=> d.source.id == selectedNode.id ? colorScale(d.source.partito) : "#ddd")
+		
+
+	}
+	
+	
 }
 
 function updateTooltip(d, el) {
+
+	return;
 	var t;
 	if(d) {
 		t =d.tweets + " tweets";
+		tooltip
+		.style("visibility", "visible")
+		.html(`<p>${t}</p>`)
+
 	} else {
 		t = "";
+		tooltip
+		.style("visibility", "hidden")
+		.html("");
 	}
 	el.attr("stroke", d ? "black" : "none")
-	tooltip
-	.style("visibility", d !== null ? "visible" :"hidden")
-	.text(t);
+
 }
 
 
 function updateTooltipPosition(){
-	tooltip.attr("transform", `translate(${d3.event.x}, ${d3.event.y + 30})`);
+	tooltip.style("transform", `translate(${d3.event.x + 20 }px, ${d3.event.y - 20}px)`);
 }
 
 function changeThreshold(index, value) {
@@ -431,7 +505,8 @@ function setupSlider(extent, updateGraph, color){
 
 	var handle = slider.selectAll("rect")
 	.data(sliderVals)
-	.enter().append("circle", ".track-overlay")
+	.enter()
+	.append("circle", ".track-overlay")
 	.attr("class", "handle")
 	.attr("cy", 0)
 	.attr("rx", 3)

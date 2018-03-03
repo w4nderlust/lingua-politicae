@@ -1,0 +1,86 @@
+
+body, html {
+  font-family: sans-serif;
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow: hidden;
+}
+
+/* GRAPH */
+svg .link {
+ stroke: #ddd;
+ fill:none;
+}
+
+svg text {
+  pointer-events: none;
+  font-size: .7rem;
+}
+
+#title {
+  position: absolute;
+  margin: 1.5rem 0 0 2rem ;
+}
+
+svg circle {
+  cursor: pointer;
+}
+
+/* SIDEBAR */
+#sidebarwrapper {
+  height:90%;
+  position: absolute;
+  overflow: hidden;
+  overflow-y: visible;
+  width:30%;
+  top:0;
+  right:0;
+}
+
+#sidebar{
+  font-size: .8rem;
+  background: rgba(255, 255, 255, .2);
+}
+
+#legenda {
+  pointer-events: none;
+  position: absolute;
+  left:0;
+  width:70%;
+  bottom:0;
+  padding:2rem;
+  font-size: 70%;
+}
+
+label {
+  cursor: pointer;
+}
+
+/* TOOLTIP */
+#tooltip {
+  font-size:.8rem;
+  pointer-events: none;
+  position: absolute;
+  top:0;
+  left:0;
+  background: rgba(255,255,255,.95);
+  box-shadow: 2px 2px 2px rgba(0,0,0,.5);
+  padding: 2rem;
+}
+#tooltip h3 {
+  margin-top:0;
+}
+#tooltip ul, #tooltip li{
+  list-style-type: none;
+  margin:0;
+  padding:0;
+}
+/*#tooltip p {
+  display: inline-block;
+  background: white;
+  padding: .2rem .2rem;
+  margin-top:-50%;
+  margin-left:-50%;
+  box-shadow: 2px 2px 2px rgba(0,0,0,.5);
+}*/
