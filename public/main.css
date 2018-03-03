@@ -7,6 +7,28 @@ body, html {
   overflow: hidden;
 }
 
+body {
+  display:flex;
+}
+
+#title {
+  position: absolute;
+  margin: 1rem 0 0 2rem ;
+}
+
+#title h2{
+      margin: 0.4rem 0;
+}
+#legenda {
+  pointer-events: none;
+  position: absolute;
+  left:0;
+  width:70%;
+  bottom:0;
+  padding:2rem;
+  font-size: 70%;
+}
+
 /* GRAPH */
 svg .link {
  stroke: #ddd;
@@ -18,42 +40,7 @@ svg text {
   font-size: .7rem;
 }
 
-#title {
-  position: absolute;
-  margin: 1.5rem 0 0 2rem ;
-}
-
 svg circle {
-  cursor: pointer;
-}
-
-/* SIDEBAR */
-#sidebarwrapper {
-  height:90%;
-  position: absolute;
-  overflow: hidden;
-  overflow-y: visible;
-  width:30%;
-  top:0;
-  right:0;
-}
-
-#sidebar{
-  font-size: .8rem;
-  background: rgba(255, 255, 255, .2);
-}
-
-#legenda {
-  pointer-events: none;
-  position: absolute;
-  left:0;
-  width:70%;
-  bottom:0;
-  padding:2rem;
-  font-size: 70%;
-}
-
-label {
   cursor: pointer;
 }
 
@@ -61,12 +48,9 @@ label {
 #tooltip {
   font-size:.8rem;
   pointer-events: none;
-  position: absolute;
-  top:0;
-  left:0;
   background: rgba(255,255,255,.95);
-  box-shadow: 2px 2px 2px rgba(0,0,0,.5);
   padding: 2rem;
+  padding-top: 40vh;
 }
 #tooltip h3 {
   margin-top:0;
@@ -76,11 +60,3 @@ label {
   margin:0;
   padding:0;
 }
-/*#tooltip p {
-  display: inline-block;
-  background: white;
-  padding: .2rem .2rem;
-  margin-top:-50%;
-  margin-left:-50%;
-  box-shadow: 2px 2px 2px rgba(0,0,0,.5);
-}*/
