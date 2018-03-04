@@ -6,18 +6,23 @@ body, html {
   margin:0;
   overflow: hidden;
 }
-
 body {
   display:flex;
+  flex-direction: column;
+}
+
+#container {
+  display:flex;
+  flex-grow: 1;
 }
 
 #title {
-  position: absolute;
-  margin: 1rem 0 0 2rem ;
+  padding:2rem;
+  padding-bottom:0;
 }
 
 #title h2{
-      margin: 0.4rem 0;
+  margin: 0.4rem 0;
 }
 #legenda {
   pointer-events: none;
@@ -46,15 +51,15 @@ svg circle {
 
 /* TOOLTIP */
 #tooltip {
+  position: absolute;
+  right:0;
   font-size:.8rem;
   pointer-events: none;
   background: rgba(255,255,255,.95);
-  padding: 2rem;
-  padding-top: 40vh;
+  padding: 1.2rem 2rem;
+  width:30%;
 }
-#tooltip h3 {
-  margin-top:0;
-}
+
 #tooltip ul, #tooltip li{
   list-style-type: none;
   margin:0;
