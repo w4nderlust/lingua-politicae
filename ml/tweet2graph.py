@@ -10,6 +10,7 @@ from sklearn.metrics import silhouette_score, calinski_harabaz_score
 from tabulate import tabulate
 from tweetokenize import Tokenizer
 import numpy as np
+from scipy import stats
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
@@ -20,6 +21,7 @@ graph_file = 'viz/politicians_graph.json'
 stopwords_file = 'res/italian_stopwords_big.txt'
 tweet_stopwords = ['URL', 'ELLIPSIS', 'NUMBER', 'USERNAME']
 
+terms_per_node = 5
 terms_per_edge = 5
 
 num_clusters_range = range(2, 15)
@@ -202,7 +204,6 @@ print(
         min_scores, percentile10_scores, percentile25_scores, mean_scores,
         median_scores, percentile75_scores, percentile90_scores, max_scores, std_scores))
 
-
 # Calculating terms per edge
 print("Calculating terms per edge...")
 t0 = time()
@@ -215,31 +216,29 @@ for i in range(len(politicians_sorted)):
         proto_politician_j = np.squeeze(np.asarray(politician_proto[politicians_sorted[j]]))
         proto_politician_j /= np.linalg.norm(proto_politician_j)
 
-        euclidean_distance = np.absolute(proto_politician_i - proto_politician_j)
-        sorted_word_ids = np.argsort(euclidean_distance)
+        distance = np.absolute(proto_politician_i - proto_politician_j)
+        sorted_word_ids = np.argsort(distance)
 
         sorted_proto_politician_i = proto_politician_i[sorted_word_ids]
         sorted_proto_politician_j = proto_politician_j[sorted_word_ids]
 
-        words_used_by_politician_i = np.logical_not(sorted_proto_politician_i == 0)
-        words_used_by_politician_j = np.logical_not(sorted_proto_politician_i == 0)
+        words_used_by_politician_i = sorted_proto_politician_i != 0
+        words_used_by_politician_j = sorted_proto_politician_i != 0
         words_used_by_both = np.logical_and(words_used_by_politician_i, words_used_by_politician_j)
 
         filtered_sorted_word_ids = sorted_word_ids[words_used_by_both]
 
-        # min-max normalization
-        ed = euclidean_distance[filtered_sorted_word_ids]
-        ed_max = ed.max()
-        ed_min = ed.min()
-        euclidean_distance = 2 * (euclidean_distance - ed_min) / (ed_max - ed_min) - 1
+        # normalization
+        filtered_distance = distance[filtered_sorted_word_ids]
+        z_normalized_filtered_distance = stats.zscore(filtered_distance)
 
+        most_similar_weights = -z_normalized_filtered_distance[:terms_per_edge]
         most_similar_word_ids = filtered_sorted_word_ids[:terms_per_edge]
-        most_similar_weights = -euclidean_distance[most_similar_word_ids]
         most_similar_words = [vocab[i] for i in most_similar_word_ids]
         most_similar = list(zip(most_similar_words, most_similar_weights))
 
+        most_different_weights = -z_normalized_filtered_distance[-terms_per_edge:]
         most_different_word_ids = filtered_sorted_word_ids[-terms_per_edge:]
-        most_different_weights = -euclidean_distance[most_different_word_ids]
         most_different_words = [vocab[i] for i in most_different_word_ids]
         most_different = list(zip(most_different_words, most_different_weights))
 
@@ -247,6 +246,24 @@ for i in range(len(politicians_sorted)):
                                                                                  "most_different": most_different}
 print("done in {:0.4f}s".format(time() - t0))
 
+# Calculating terms per edge
+print("Calculating terms per node...")
+t0 = time()
+terms_per_node_matrix = {}
+for i in range(len(politicians_sorted)):
+    proto_politician_i = np.squeeze(np.asarray(politician_proto[politicians_sorted[i]]))
+    sorted_word_ids = np.argsort(proto_politician_i)
+    sorted_proto_politician_i = proto_politician_i[sorted_word_ids]
+    words_used_by_politician_i = np.logical_not(sorted_proto_politician_i == 0)
+    filtered_sorted_word_ids = sorted_word_ids[words_used_by_politician_i]
+
+    most_important_word_ids = filtered_sorted_word_ids[-terms_per_node:]
+    most_important_weights = proto_politician_i[most_important_word_ids]
+    most_important_words = [vocab[i] for i in most_important_word_ids]
+    most_important = list(zip(most_important_words, most_important_weights))
+
+    terms_per_node_matrix[politicians_sorted[i]] = {"most_important": most_important}
+print("done in {:0.4f}s".format(time() - t0))
 
 # Calculating clusters and finding the best scoring number of them
 print("Calculating clustering...")
@@ -298,7 +315,8 @@ for i, politician in enumerate(politicians_sorted):
          'handle': politician,
          'tweets': len(politician_tweets[politician]),
          'cluster': np.asscalar(best_cluster_labels[i]),
-         'cluster_distances': best_cluster_distances[i].tolist() if best_cluster_distances is not None else None})
+         'cluster_distances': best_cluster_distances[i].tolist() if best_cluster_distances is not None else None,
+         'most_important_words': terms_per_node_matrix[politician]})
 
 edges = []
 for i in range(len(politicians_sorted)):
