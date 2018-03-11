@@ -16,7 +16,7 @@ Install
 
 Clone the repo:
 
-    git clone git@github.com:w4nderlust/lingua-politicae.git
+    git clone https://github.com/tezzutezzu/lingua-politicae.git
 
 Create and activate a python3 virtual environment:
 
@@ -29,7 +29,7 @@ Install the requirements with `pip`:
 
 Install `tweetokenize` from this [repo](https://github.com/w4nderlust/tweetokenize):
 
-    git clone git@github.com:w4nderlust/tweetokenize.git
+    git clone https://github.com/w4nderlust/tweetokenize.git
     cd tweetokenize
     python setup.py install
     cd ..
