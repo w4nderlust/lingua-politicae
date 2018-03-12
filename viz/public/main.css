@@ -6,47 +6,55 @@ body, html {
   margin:0;
   overflow: hidden;
 }
-body {
-  display:flex;
-  flex-direction: column;
-}
 
 #container {
-  display:flex;
-  flex-grow: 1;
+    width:100%;
+  height:100%;
+}
+#container, #title {
+  position: absolute;
+  left:0;
+  top:0;
 }
 
 #title {
   padding:2rem;
+  padding-top:1rem;
   padding-bottom:0;
 }
 
 #title h2{
-  margin: 0.4rem 0;
+  margin: 0;
 }
+
 #legenda {
   pointer-events: none;
   position: absolute;
-  left:0;
-  width:70%;
   bottom:0;
-  padding:2rem;
-  font-size: 70%;
+  padding: 1rem 2rem;
+  font-size: .8rem;
 }
 
 /* GRAPH */
-svg .link {
- stroke: #ddd;
- fill:none;
+#nodecontainer {
+  position: absolute;
+  top:0;
+  left:0;
 }
-
-svg text {
-  pointer-events: none;
-  font-size: .7rem;
+.node {
+  position: absolute;
+  top:0;
+  left:0;
 }
-
-svg circle {
-  cursor: pointer;
+.nodebg {
+  background: white;
+}
+.nodeimage {
+  position: absolute;
+  top:0;
+  left:0;
+  background-size: cover;
+  /*filter: grayscale(100%);*/
 }
 
 /* TOOLTIP */
