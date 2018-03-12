@@ -90,8 +90,8 @@ d3.json("politicians_graph.json", onLoaded);
 function onLoaded(error, data) {
 	if (error) throw error;
 
-	let partiti = {};
-	data.nodes.forEach(d=>{if(!partiti[d.partito]) partiti[d.partito]= d;});
+	let parties = {};
+	data.nodes.forEach(d=>{if(!parties[d.party]) parties[d.party]= d;});
 
 	graph = data;
 	
@@ -104,14 +104,13 @@ function onLoaded(error, data) {
 	graph.nodes.forEach((d,i)=> d.id=i);
 	graph.edges = graph.edges.filter(d=>d.weight > 0.1);
 
-	// update scales
-	let sortedWeights = graph.edges.map((d)=>d.weight).sort();
+    // update scales
+	let sortedWeights = graph.edges.map((d)=>d.weight;).sort();
 	let quantileExtent = [d3.quantile(sortedWeights, 0.05), d3.quantile(sortedWeights, 0.95)];
 
 	distanceScale.domain(quantileExtent);
 	strokeScale.domain(quantileExtent);
 	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
-
 
 	updateGraph();
 }
@@ -137,9 +136,9 @@ function updateGraph() {
 	.attr("height",1);
 
 
-
 	nodes = nodesCont.selectAll(".node")
 	.data(graph.nodes, (d)=>d.name)
+
 	.enter()
 	.append("div")
 	.attr("class", "node")
@@ -191,7 +190,7 @@ function updateGraph() {
 
 
 function ticked() {
-	edgesCont.selectAll(".edge")
+edgesCont.selectAll(".edge")
 	.attr("transform", d=>`translate(${d.source.x} ${d.source.y})`)
 	.select("rect")
 	.attr("width", d=>{
@@ -206,7 +205,6 @@ function ticked() {
 
 	nodes
 	.style("transform", d=>`translate(${d.x}px, ${d.y}px)`);
-
 }
 
 function dragstarted(d) {
@@ -343,7 +341,6 @@ function updateEdgeStrokes() {
 		}
 
 	});
-
 }
 
 
