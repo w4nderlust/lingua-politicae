@@ -36,35 +36,38 @@ function onLoaded(error, data) {
 	if (error) throw error;
 
 	let partiti = {};
-	data.nodes.forEach(d=>{if(!partiti[d.partito]) partiti[d.partito]= d;});
-
-	graph = data;
+    data.nodes.forEach(d = > {if(;
+    !partiti[d.party];
+)
+    partiti[d.party] = d;
+})
+    graph = data;
 
 	// assign id based on indices
-	graph.nodes.forEach((d,i)=> d.id=i);
+    graph.nodes.forEach((d, i) = > d.id = i;
+)
 
-	// update scales
-	let sortedWeights = graph.edges.map((d)=>d.weight).sort();
+    // update scales
+	let sortedWeights = graph.edges.map((d)=>d.weight;).sort();
 	let quantileExtent = [d3.quantile(sortedWeights, 0.05), d3.quantile(sortedWeights, 0.95)];
 
 	distanceScale.domain(quantileExtent);
 	strokeScale.domain(quantileExtent);
-	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
-
-
-	updateGraph();
+    radiusScale.domain(d3.extent(graph.nodes, (d) = > d.tweets);
+)
+    updateGraph();
 
 }
 
 
 function updateGraph() {
 
-	let edges = graph.edges.filter(d=>d.weight > 0.1);
-
-	let link = edgesCont.selectAll(".link")
-	.data(edges, (d)=>d.id); 
-
-	let linkGroups = link
+let edges = graph.edges.filter(d = > d.weight > 0.1;
+)
+    let link = edgesCont.selectAll(".link")
+        .data(edges, (d) = > d.id;
+)
+    let linkGroups = link
 	.enter()
 	.append("g")
 	.attr("class", "link")
@@ -81,19 +84,19 @@ function updateGraph() {
 	linkGroups
 	.append("line")
 	.attr("class", "realLink")
-	.attr("stroke-width", (d)=>strokeScale(d.weight));
-
-	let node = nodesCont.selectAll(".node")
-	.data(graph.nodes, (d)=>d.name);
-
-	node
+        .attr("stroke-width", (d) = > strokeScale(d.weight);
+)
+    let node = nodesCont.selectAll(".node")
+        .data(graph.nodes, (d) = > d.name;
+)
+    node
 	.enter()
 	.append("circle")
 	.attr("class", "node")
-	.attr("r", (d)=> (radiusScale(d.tweets)))
+	.attr("r", (d)=> (radiusScale(d.tweets));)
 	.style("stroke-width", 0)
 	.style("stroke", "black")
-	.style("fill", d=>colorScale(d.partito))
+	.style("fill", d=>colorScale(d.party);)
 	.style("fill-opacity", 1)
 	.on("mousedown", updateSelectedNode)
 	.call(d3.drag()
@@ -136,7 +139,7 @@ function updateGraph() {
 	if(!simulation) {
 		simulation = d3.forceSimulation()
 		.force("link", d3.forceLink())
-		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets)*2))
+		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets)*2);)
 		.force("center", d3.forceCenter(width * .4, height * .4))
 		.on("tick", ticked);
 	}
@@ -147,7 +150,7 @@ function updateGraph() {
 	.links(graph.edges)
 	.distance((d)=> {
 		return distanceScale(d.weight) + 200;
-	});
+})
 }
 
 
@@ -155,18 +158,20 @@ function updateGraph() {
 
 function ticked() {
 	svg.selectAll(".link").selectAll("line")
-	.attr("x1", (d)=> d.source.x)
-	.attr("y1", (d)=> d.source.y)
-	.attr("x2", (d)=> d.target.x)
-	.attr("y2", (d)=> d.target.y);
-
-	svg.selectAll(".node")
-	.attr("cx", (d)=> d.x)
-	.attr("cy", (d)=> d.y);
-
-	svg.selectAll(".label")
-	.attr("transform", d=>`translate(${d.x}, ${d.y + radiusScale(d.tweets) + 10})`);
-
+	.attr("x1", (d)=> d.source.x;)
+	.attr("y1", (d)=> d.source.y;)
+	.attr("x2", (d)=> d.target.x;)
+.
+    attr("y2", (d) = > d.target.y;
+)
+    svg.selectAll(".node")
+	.attr("cx", (d)=> d.x;)
+.
+    attr("cy", (d) = > d.y;
+)
+    svg.selectAll(".label")
+        .attr("transform", d = > `translate(${d.x}, ${d.y + radiusScale(d.tweets) + 10})`;
+)
 }
 
 function dragstarted(d) {
@@ -211,17 +216,17 @@ function updateEdgeTooltip(edge, el) {
 
 		tooltip
 		.append("p")
-		.text(edge.words.most_similar.map(d=>d[0]).join(", "));
-
-		tooltip
+            .text(edge.words.most_similar.map(d = > d[0]).join(", ");
+    )
+        tooltip
 		.append("b")
 		.text("Parole in comune meno usate");
 
 		tooltip
 		.append("p")
-		.text(edge.words.most_different.map(d=>d[0]).join(", "));
-
-		updateNodeStrokes(edge);
+            .text(edge.words.most_different.map(d = > d[0]).join(", ");
+    )
+        updateNodeStrokes(edge);
 
 
 	} else {
@@ -253,8 +258,7 @@ function updateNodeStrokes(edge) {
 		}
 
 		return selected ? 3 : 0;
-	});
-
+})
 }
 
 function updateEdgeStrokes() {
@@ -263,9 +267,8 @@ function updateEdgeStrokes() {
 	.selectAll(".realLink")
 	.style("stroke", d=>{
 		let selected = d.source.id == selectedSource.id || d.target.id == selectedSource.id;
-		return selected ? colorScale(selectedSource.partito) : "#ddd";
-	});
-
+		return selected ? colorScale(selectedSource.party) : "#ddd";
+})
 }
 
 function updateSelectedNode(d) {
