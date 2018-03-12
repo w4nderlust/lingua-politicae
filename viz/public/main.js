@@ -1,5 +1,5 @@
 const DEBUG = false;
-const PARTIES = ["M5S", "+Europa", "Lega Nord", "Forza Italia", "Potere Al Popolo",  "Fratelli d'Italia", "PD",  "Liberi e Uguali", "Casa Pound"];
+const PARTIES = ["M5S", "+Europa", "Lega Nord", "Forza Italia", "Potere Al Popolo",  "Fratelli d Italia", "PD",  "Liberi e Uguali", "Casa Pound"];
 const PARTYCOLORS  = ["#FCDA1B", "#2D9DB4", "#299733", "#13487B", "#DE0016", "#151653", "#EB733F", "#DE0000", "#00ff33"];
 
 let container = d3.select("#container");
