@@ -510,6 +510,7 @@ sarete
 sarà
 sará
 sarò
+saro
 scola
 scopo
 scorso

@@ -1,10 +1,13 @@
 import sys
 import json
+from os import listdir
+
 import unidecode
 from time import time
 from collections import defaultdict
 
 from ascii_graph import Pyasciigraph
+from os.path import isfile, join, basename
 from sklearn.cluster import SpectralClustering, KMeans
 from sklearn.metrics import silhouette_score, calinski_harabaz_score
 from tabulate import tabulate
@@ -14,11 +17,11 @@ from scipy import stats
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
-
-tweet_files = ['ale_dibattista_tweets','Antonio_Tajani_tweets','beppe_grillo_tweets','berlusconi_tweets','CarloCalenda_tweets','civati_tweets','distefanoTW_tweets','emmabonino_tweets','FusacchiA_tweets','gasparripdl_tweets','GiorgiaMeloni_tweets','GiovanniToti_tweets','GuidoCrosetto_tweets','Ignazio_LaRussa_tweets','lauraboldrini_tweets','luigidimaio_tweets','mara_carfagna_tweets','matteorenzi_tweets','matteosalvinimi_tweets','PaoloGentiloni_tweets','PietroGrasso_tweets','potere_alpopolo_tweets','renatobrunetta_tweets','Roberto_Fico_tweets']
-names_file = 'data/names.json'
-graph_file = 'viz/politicians_graph.json'
-stopwords_file = 'res/italian_stopwords_big.txt'
+DATA_DIR = 'data'
+politicians_info_file_path = 'data/politicians_info.json'
+graph_file_path = 'viz/public/politicians_graph.json'
+stopwords_file_path = 'ml/res/italian_stopwords_big.txt'
+english_stopwords_file_path = 'ml/res/english_stopwords.txt'
 tweet_stopwords = ['URL', 'ELLIPSIS', 'NUMBER', 'USERNAME']
 
 terms_per_node = 5
@@ -28,10 +31,16 @@ num_clusters_range = range(2, 15)
 clustering_algorithm = KMeans
 clustering_quality_measure = calinski_harabaz_score
 
+politicians_info = {}
+with open(politicians_info_file_path, 'r') as politicians_info_file:
+    politicians_info_list = json.load(politicians_info_file)
+    for politician in politicians_info_list:
+        politicians_info[politician['twitter']] = politician
+
 
 # Utils
 def file2name(filename):
-    return '@' + filename
+    return '@' + filename.replace('_tweets', '').replace('.json', '')
 
 
 def tokenize(text):
@@ -56,10 +65,13 @@ def term_scores(vectorizer, matrix):
 # Initilization
 print("Initilizing...")
 t0 = time()
-with open(stopwords_file) as f:
+with open(stopwords_file_path) as f:
     stopwords_list = f.readlines()
-stopwords = [word.strip() for word in stopwords_list if word.strip()] + tweet_stopwords
-politicians_sorted = sorted([file2name(tweet_file) for tweet_file in tweet_files])
+with open(english_stopwords_file_path) as f:
+    english_stopwords_list = f.readlines()
+stopwords = [word.strip() for word in stopwords_list if word.strip()] + [word.strip() for word in english_stopwords_list
+                                                                         if word.strip()] + tweet_stopwords
+politicians_sorted = sorted(list(politicians_info.keys()))
 politician_tweets = defaultdict(list)
 tweet_list = []
 tokenizer = Tokenizer()
@@ -69,8 +81,10 @@ print("done in {:0.4f}s".format(time() - t0))
 print("Collecting tweets...")
 t0 = time()
 tweets_so_far = 0
-for tweet_file in tweet_files:
-    with open("data/" + tweet_file + ".json") as tf:
+only_jsons = [f for f in listdir(DATA_DIR) if
+              isfile(join(DATA_DIR, f)) and f.endswith('.json') and not f == basename(politicians_info_file_path)]
+for tweet_file in only_jsons:
+    with open(join(DATA_DIR, tweet_file)) as tf:
         tweets = json.load(tf)
         for tweet in tweets:
             tweet_list.append(unidecode.unidecode(tweet['text']))
@@ -311,12 +325,13 @@ t0 = time()
 nodes = []
 for i, politician in enumerate(politicians_sorted):
     nodes.append(
-        {'name': politician,
-         'handle': politician,
+        {'name': politicians_info[politician]['name'],
+         'party': politicians_info[politician]['party'],
+         'twitter': politicians_info[politician]['twitter'],
          'tweets': len(politician_tweets[politician]),
          'cluster': np.asscalar(best_cluster_labels[i]),
          'cluster_distances': best_cluster_distances[i].tolist() if best_cluster_distances is not None else None,
-         'most_important_words': terms_per_node_matrix[politician]})
+         'most_important_words': list(reversed(terms_per_node_matrix[politician]['most_important']))})
 
 edges = []
 for i in range(len(politicians_sorted)):
@@ -333,6 +348,6 @@ print(graph)
 # Saving politicians graph
 print("Saving politicians graph...")
 t0 = time()
-with open(graph_file, 'w') as gf:
+with open(graph_file_path, 'w') as gf:
     json.dump(graph, gf)
 print("done in {:0.4f}s".format(time() - t0))

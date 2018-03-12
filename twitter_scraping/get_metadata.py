@@ -9,10 +9,10 @@ from tweepy import TweepError
 from time import sleep
 
 try:
-    with open('../names.json') as data_file:    
+    with open('../data/politicians_info.json') as data_file:
         users = json.load(data_file)
 except:
-    print("A problem occurred when parsing names.json")
+    print("A problem occurred when parsing politicians_info.json")
 
 
 with open('api_keys.json') as f:
