@@ -1,5 +1,5 @@
 const DEBUG = false;
-const PARTIES = ["M5S", "piùEuropa", "Lega Nord", "Forza Italia", "Potere Al Popolo",  "fratelli", "PD",  "Liberi e Uguali", "Casa Pound"];
+const PARTIES = ["M5S", "+Europa", "Lega Nord", "Forza Italia", "Potere Al Popolo",  "Fratelli d'Italia", "PD",  "Liberi e Uguali", "Casa Pound"];
 const PARTYCOLORS  = ["#FCDA1B", "#2D9DB4", "#299733", "#13487B", "#DE0016", "#151653", "#EB733F", "#DE0000", "#00ff33"];
 
 let container = d3.select("#container");
@@ -30,49 +30,46 @@ let state = IDLE;
 let gradients = [];
 PARTIES.forEach(d=>{
 	PARTIES.forEach(dd=>{
-		if(dd!=d) {
+		if(dd!=d;) {
 			gradients.push({
 				source:{
-					partito:d
+					party:d
 				},
 				target:{
-					partito:dd
+					party:dd
 				},
 			});
 		}
-	});
-	gradients.push({
+})
+gradients.push({
 		source:{
-			partito:d
+			party:d
 		},
 		target:{
-			partito:d
+			party:d
 		},
 	});
-});
-
-
-
+})
 let gradient = svg
 .append("defs")
 .selectAll("linearGradient")
 .data(gradients)
 .enter()
 .append("linearGradient")
-.attr("id", d=>getGradientName(d.source, d.target));
+.attr("id", d => getGradientName(d.source, d.target);)
 
 gradient.append("stop")
-.attr("stop-color", d=>colorScale(d.source.partito))
+.attr("stop-color", d=>colorScale(d.source.party);)
 .attr("offset", "0%");
 
 gradient.append("stop")
-.attr("stop-color", d=>colorScale(d.target.partito))
+.attr("stop-color", d=>colorScale(d.target.party);)
 .attr("offset", "100%");
 
 
 // DATA
 let graph;
-let nodes; 
+let nodes;
 
 let selectedSource;
 let selectedTarget;
@@ -91,18 +88,17 @@ function onLoaded(error, data) {
 	if (error) throw error;
 
 	let parties = {};
-	data.nodes.forEach(d=>{if(!parties[d.party]) parties[d.party]= d;});
+    data.nodes.forEach(d => {if(;!parties[d.party];) parties[d.party] = d})
+    graph = data;
 
-	graph = data;
-	
 	if(DEBUG) {
 		graph.nodes = graph.nodes.slice(0,2);
-		graph.edges = graph.edges.filter(d=>(d.source==0 || d.source==1) && (d.target==0 || d.target==1));
-	}
+        graph.edges = graph.edges.filter(d => (d.source == 0 || d.source == 1) && (d.target == 0 || d.target == 1);)
+    }
 
 	// assign id based on indices
-	graph.nodes.forEach((d,i)=> d.id=i);
-	graph.edges = graph.edges.filter(d=>d.weight > 0.1);
+    graph.nodes.forEach((d, i) => d.id = i;)
+    graph.edges = graph.edges.filter(d => d.weight > 0.1;)
 
     // update scales
 	let sortedWeights = graph.edges.map((d)=>d.weight;).sort();
@@ -110,9 +106,8 @@ function onLoaded(error, data) {
 
 	distanceScale.domain(quantileExtent);
 	strokeScale.domain(quantileExtent);
-	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
-
-	updateGraph();
+    radiusScale.domain(d3.extent(graph.nodes, (d) => d.tweets);)
+    updateGraph();
 }
 
 
@@ -121,9 +116,8 @@ function updateGraph() {
 	let edges = graph.edges;
 
 	let edge = edgesCont.selectAll(".edge")
-	.data(edges, (d)=>d.id); 
-
-	let edgeGroups = edge
+        .data(edges, (d) => d.id;)
+    let edgeGroups = edge
 	.enter()
 	.append("g")
 	.attr("class", "edge")
@@ -137,7 +131,7 @@ function updateGraph() {
 
 
 	nodes = nodesCont.selectAll(".node")
-	.data(graph.nodes, (d)=>d.name)
+	.data(graph.nodes, (d)=>d.name;)
 
 	.enter()
 	.append("div")
@@ -153,25 +147,22 @@ function updateGraph() {
 	.append("div")
 	.attr("class", "nodebg")
 	.style("transform", "translate(-50%,-50%")
-	.style("border-radius", (d)=> (radiusScale(d.tweets)/2)+"px")
-	.style("width", (d)=> radiusScale(d.tweets)+"px")
-	.style("height", (d)=> radiusScale(d.tweets)+"px");
+	.style("border-radius", (d)=> (radiusScale(d.tweets)/2)+"px";)
+	.style("width", (d)=> radiusScale(d.tweets)+"px";)
+    .style("height", (d) => radiusScale(d.tweets) + "px";)
 
 	nodes
 	.append("div")
 	.attr("class", "nodeimage")
 	.style("transform", "translate(-50%,-50%")
-	.style("background-image", d=>`url(images/${d.handle.substr(1)}.jpg)`)
-	.style("border-radius", (d)=> (radiusScale(d.tweets)/2)+"px")
-	.style("width", (d)=> radiusScale(d.tweets)+"px")
-	.style("height", (d)=> radiusScale(d.tweets)+"px");
-	
-
-
-	if(!simulation) {
+	.style("background-image", d=>`url(images/${d.twitter.substr(1)}.jpg)`;)
+	.style("border-radius", (d)=> (radiusScale(d.tweets)/2)+"px";)
+	.style("width", (d)=> radiusScale(d.tweets)+"px";)
+    .style("height", (d) => radiusScale(d.tweets) + "px";)
+    if(!simulation) {
 		simulation = d3.forceSimulation()
 		.force("edge", d3.forceLink())
-		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets)))
+		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets));)
 		.force("center", d3.forceCenter(width * .7, height * .5))
 		.on("tick", ticked);
 	}
@@ -181,17 +172,16 @@ function updateGraph() {
 
 	simulation.force("edge")
 	.links(graph.edges)
-	.distance((d)=> {
+	.distance((d) => {
 		return distanceScale(d.weight) + 200;
-	});
-
-	updateEdgeStrokes();
+})
+    updateEdgeStrokes();
 }
 
 
 function ticked() {
 edgesCont.selectAll(".edge")
-	.attr("transform", d=>`translate(${d.source.x} ${d.source.y})`)
+	.attr("transform", d=>`translate(${d.source.x} ${d.source.y})`;)
 	.select("rect")
 	.attr("width", d=>{
 		let dx = d.target.x - d.source.x;
@@ -201,10 +191,9 @@ edgesCont.selectAll(".edge")
 	.attr("transform", d=>{
 		let a = Math.atan2(d.target.y-d.source.y, d.target.x - d.source.x) * 180 / Math.PI;
 		return `rotate(${a})`;
-	});
-
-	nodes
-	.style("transform", d=>`translate(${d.x}px, ${d.y}px)`);
+})
+    nodes
+        .style("transform", d => `translate(${d.x}px, ${d.y}px)`;)
 }
 
 function dragstarted(d) {
@@ -236,12 +225,11 @@ function findEdgeBetweenNodes(nodeA, nodeB) {
 
 	let edge;
 	graph.edges.forEach(d=>{
-		if((d.source.id == nodeA.id || d.target.id == nodeA.id) && (d.source.id == nodeB.id || d.target.id == nodeB.id)) {
+		if((d.source.id == nodeA.id || d.target.id == nodeA.id) && (d.source.id == nodeB.id || d.target.id == nodeB.id);) {
 			edge = d;
 		}
-	});
-
-	return edge;
+})
+    return edge;
 }
 
 function updateEdgeTooltip(edge, el) {
@@ -275,28 +263,28 @@ function updateTooltip(edge) {
 function updateNodes() {
 
 	switch(state) {
-		
+
 		case IDLE:
 		nodes.select(".nodeimage").style("opacity", 1);
 		break;
 
 		case NODE_MODE:
 		let targetNodes = graph.edges.map(d=>{
-			if(d.source==selectedSource) return d.target;
-			if(d.target==selectedSource) return d.source;
-		}).filter(d=>d!=undefined);
-
-		nodes.each(function(d){
+				if (d.source == selectedSource;) return d.target;
+				if (d.target == selectedSource) return d.source;
+			}
+		).filter(d => d != undefined;)
+    nodes.each(function(d){
 			let el = d3.select(this);
-			let selected = targetNodes.indexOf(d) != -1 || d == selectedSource 
+			let selected = targetNodes.indexOf(d) != -1 || d == selectedSource;
 			el.style("pointer-events", selected ? "auto" : "none");
 			el.select(".nodeimage").style("opacity", selected ? 1 : .5);
 		});
 		break;
 
-		case LINK_MODE:
-		nodes.select(".nodeimage").style("opacity", d=> d == selectedTarget || d == selectedSource ? 1 : .5);
-		break;
+		case nodes.select(".nodeimage").style("opacity", d = > d == selectedTarget || d == selectedSource ? 1 : .5;
+)
+    break;
 	}
 
 }
@@ -322,7 +310,7 @@ function updateEdgeStrokes() {
 
 		let isActive = d.target == selectedSource || d.source == selectedSource;
 		let gradientName;
-		if(isActive) gradientName = getGradientName(d.source, d.target);			
+		if(isActive) gradientName = getGradientName(d.source, d.target);
 
 		switch(state) {
 			case IDLE:
@@ -368,7 +356,7 @@ function onNodeDown(d) {
 
 function getGradientName(source, target) {
 
-	return `${source.partito.replace(/\s/g, "-")}-${target.partito.replace(/\s/g, "-")}`;
+	return `${source.party.replace(/\s/g, "-")}-${target.party.replace(/\s/g, "-")}`;
 }
 
 function addBoxToText() {
