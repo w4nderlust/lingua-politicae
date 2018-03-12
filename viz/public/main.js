@@ -35,8 +35,8 @@ function onLoaded(error, data) {
 
 	if (error) throw error;
 
-	let partiti = {};
-	data.nodes.forEach(d=>{if(!partiti[d.partito]) partiti[d.partito]= d;});
+	let parties = {};
+	data.nodes.forEach(d=>{if(!parties[d.party]) parties[d.party]= d;});
 
 	graph = data;
 
@@ -62,7 +62,7 @@ function updateGraph() {
 	let edges = graph.edges.filter(d=>d.weight > 0.1);
 
 	let link = edgesCont.selectAll(".link")
-	.data(edges, (d)=>d.id); 
+	.data(edges, (d)=>d.id);
 
 	let linkGroups = link
 	.enter()
@@ -74,7 +74,7 @@ function updateGraph() {
 
 	linkGroups
 	.append("line")
-	.attr("stroke-width", 10) 
+	.attr("stroke-width", 10)
 	.style("stroke-opacity", 0);
 
 
@@ -93,7 +93,7 @@ function updateGraph() {
 	.attr("r", (d)=> (radiusScale(d.tweets)))
 	.style("stroke-width", 0)
 	.style("stroke", "black")
-	.style("fill", d=>colorScale(d.partito))
+	.style("fill", d=>colorScale(d.party))
 	.style("fill-opacity", 1)
 	.on("mousedown", updateSelectedNode)
 	.call(d3.drag()
@@ -234,8 +234,8 @@ function updateEdgeTooltip(edge, el) {
 
 
 	}
-	
-	
+
+
 }
 
 function updateNodeStrokes(edge) {
@@ -243,7 +243,7 @@ function updateNodeStrokes(edge) {
 	nodesCont
 	.selectAll(".node")
 	.style("stroke-width", d=> {
-		
+
 		let selected;
 
 		if(edge) {
@@ -263,7 +263,7 @@ function updateEdgeStrokes() {
 	.selectAll(".realLink")
 	.style("stroke", d=>{
 		let selected = d.source.id == selectedSource.id || d.target.id == selectedSource.id;
-		return selected ? colorScale(selectedSource.partito) : "#ddd";
+		return selected ? colorScale(selectedSource.party) : "#ddd";
 	});
 
 }
