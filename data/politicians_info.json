@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Antonio Tajani",
+    "party": "Forza Italia",
+    "twitter": "@Antonio_Tajani"
+  },
+  {
+    "name": "Carlo Calenda",
+    "party": "PD",
+    "twitter": "@CarloCalenda"
+  },
+  {
+    "name": "Alessandro Fusacchia",
+    "party": "piùEuropa",
+    "twitter": "@FusacchiA"
+  },
+  {
+    "name": "Giorgia Meloni",
+    "party": "Fratelli d'Italia",
+    "twitter": "@GiorgiaMeloni"
+  },
+  {
+    "name": "Giovanni Toti",
+    "party": "Forza Italia",
+    "twitter": "@GiovanniToti"
+  },
+  {
+    "name": "Guido Crosetto",
+    "party": "Fratelli d'Italia",
+    "twitter": "@GuidoCrosetto"
+  },
+  {
+    "name": "Ignazio LaRussa",
+    "party": "Fratelli d'Italia",
+    "twitter": "@Ignazio_LaRussa"
+  },
+  {
+    "name": "Paolo Gentiloni",
+    "party": "PD",
+    "twitter": "@PaoloGentiloni"
+  },
+  {
+    "name": "Pietro Grasso",
+    "party": "Liberi e Uguali",
+    "twitter": "@PietroGrasso"
+  },
+  {
+    "name": "Roberto Fico",
+    "party": "M5S",
+    "twitter": "@Roberto_Fico"
+  },
+  {
+    "name": "Alessandro Di Battista",
+    "party": "M5S",
+    "twitter": "@ale_dibattista"
+  },
+  {
+    "name": "Beppe Grillo",
+    "party": "M5S",
+    "twitter": "@beppe_grillo"
+  },
+  {
+    "name": "Silvio Berlusconi",
+    "party": "Forza Italia",
+    "twitter": "@berlusconi"
+  },
+  {
+    "name": "Giuseppe Civati",
+    "party": "Liberi e Uguali",
+    "twitter": "@civati"
+  },
+  {
+    "name": "Simone Di Stefano",
+    "party": "Casa Pound",
+    "twitter": "@distefanoTW"
+  },
+  {
+    "name": "Emma Bonino",
+    "party": "piùEuropa",
+    "twitter": "@emmabonino"
+  },
+  {
+    "name": "Maurizio Gasparri",
+    "party": "Forza Italia",
+    "twitter": "@gasparripdl"
+  },
+  {
+    "name": "Laura Boldrini",
+    "party": "Liberi e Uguali",
+    "twitter": "@lauraboldrini"
+  },
+  {
+    "name": "Luigi Di Maio",
+    "party": "M5S",
+    "twitter": "@luigidimaio"
+  },
+  {
+    "name": "Mara Carfagna",
+    "party": "Forza Italia",
+    "twitter": "@mara_carfagna"
+  },
+  {
+    "name": "Matteo Renzi",
+    "party": "PD",
+    "twitter": "@matteorenzi"
+  },
+  {
+    "name": "Matteo Salvini",
+    "party": "Lega Nord",
+    "twitter": "@matteosalvinimi"
+  },
+  {
+    "name": "Potere Al Popolo",
+    "party": "Potere Al Popolo",
+    "twitter": "@potere_alpopolo"
+  },
+  {
+    "name": "Renato Brunetta",
+    "party": "Forza Italia",
+    "twitter": "@renatobrunetta"
+  }
+]
