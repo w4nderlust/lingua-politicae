@@ -14113,7 +14113,7 @@
   },
   {
     "name": "Giorgia Meloni",
-    "partito": "Fratelli d'Italia",
+    "partito": "fratelli",
     "tweets": 786,
     "cluster_distances": [
       0.5520601326475982,
@@ -14136,7 +14136,7 @@
   {
     "name": "Guido Crosetto",
     "tweets": 132,
-    "partito": "Fratelli d'Italia",
+    "partito": "fratelli",
     "cluster_distances": [
       0.5440277987364028,
       0.45597220126359717
@@ -14146,7 +14146,7 @@
   },
   {
     "name": "Ignazio LaRussa",
-    "partito": "Fratelli d'Italia",
+    "partito": "fratelli",
     "tweets": 279,
     "cluster_distances": [
       0.5449103760818204,
