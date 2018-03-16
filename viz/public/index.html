@@ -11,19 +11,37 @@
   <div id="title">
     <h2>Distanza lessicale tra politici italiani su Twitter</h2>
     <p>Clicca su un cerchio per esplorare i collegamenti tra politici.</p>
+    <div id="sidebar">
+      <div id="node-info">
+        <h2 id="node-name"></h2>
+        <p id="node-party"></p>
+        <ul id="node-most-used"></ul>
+      </div>
+
+      <div id="edge-info">
+        <h2 id="edge-names"></h2>
+        <b>Parole importanti per entrambi</b>
+        <ul id="edge-most-similar"></ul>
+        <b>Parole meno importanti</b>
+        <ul id="edge-most-different"></ul>
+      </div>
+    </div>
   </div>
 
   <div id="container">
     <svg width="100%" height="100%"></svg>
-    <div id="tooltip"></div>
+    
   </div>
- 
-  <div id="legenda">
-    La grandezza del cerchio rappresenta il numero di tweet<br/>
-    Lo spessore della linea rappresenta quanto sono simili i lessici usati tra due politici.
-  </div>
+</div>
 
-  <script src="d3.min.js"></script>
-  <script src="main.js?r=2"></script>
+<div id="legenda">
+  <p>La grandezza del cerchio rappresenta il numero di tweet<br/>
+  Lo spessore della linea rappresenta quanto sono simili i lessici usati tra due politici.</p>
+</div>
+
+<div id="nodecontainer"></div>
+
+<script src="d3.min.js"></script>
+<script src="main.js?r=3"></script>
 </body>
 </html>

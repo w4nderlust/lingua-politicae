@@ -101,7 +101,7 @@
     },
     {
       "name": "Giorgia Meloni",
-      "party": "Fratelli d'Italia",
+      "party": "Fratelli d Italia",
       "twitter": "@GiorgiaMeloni",
       "tweets": 786,
       "cluster": 1,
@@ -167,7 +167,7 @@
     },
     {
       "name": "Guido Crosetto",
-      "party": "Fratelli d'Italia",
+      "party": "Fratelli d Italia",
       "twitter": "@GuidoCrosetto",
       "tweets": 132,
       "cluster": 1,
@@ -200,7 +200,7 @@
     },
     {
       "name": "Ignazio LaRussa",
-      "party": "Fratelli d'Italia",
+      "party": "Fratelli d Italia",
       "twitter": "@Ignazio_LaRussa",
       "tweets": 279,
       "cluster": 1,
@@ -497,7 +497,7 @@
     },
     {
       "name": "Emma Bonino",
-      "party": "pi\u00f9Europa",
+      "party": "+Europa",
       "twitter": "@emmabonino",
       "tweets": 263,
       "cluster": 1,
