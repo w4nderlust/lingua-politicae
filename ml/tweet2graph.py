@@ -222,8 +222,10 @@ print(
 print("Calculating terms per edge...")
 t0 = time()
 
-def weighted_distance(a,b):
+
+def weighted_distance(a, b):
     return (1 + np.absolute(a - b)) / np.sqrt((a + 1) * (b + 1))
+
 
 terms_per_edge_matrix = {}
 for i in range(len(politicians_sorted)):
@@ -302,10 +304,11 @@ for i in range(len(politicians_sorted)):
         most_correlated_with_j_words = [vocab[i] for i in most_correlated_with_j_ids]
         most_correlated_with_j = list(zip(most_correlated_with_j_words, most_correlated_with_j_weights))
 
-        terms_per_edge_matrix[(politicians_sorted[i], politicians_sorted[j])] = {"most_correlated_with_both": most_correlated_with_both,
-                                                                                 "most_correlated_with_source": most_correlated_with_i,
-                                                                                 "most_correlated_with_target": most_correlated_with_j}
-                                                                                 
+        terms_per_edge_matrix[(politicians_sorted[i], politicians_sorted[j])] = {
+            "most_correlated_with_both": most_correlated_with_both,
+            "most_correlated_with_source": most_correlated_with_i,
+            "most_correlated_with_target": most_correlated_with_j}
+
 print("done in {:0.4f}s".format(time() - t0))
 
 # Calculating terms per edge
