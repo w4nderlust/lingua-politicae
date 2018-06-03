@@ -104,15 +104,6 @@ function onLoaded(error, data) {
 
 	edgesCont = svg.append("g").attr("id", "edgesCont");
 
-	d3.select("body").on("mousedown", ()=>{
-		if(state === LINK_MODE) {
-			selectedSource = null;
-			selectedTarget = null;
-			selectedEdge = null;
-			state = IDLE;
-			update();
-		} 
-	}, true);
 
 	initGraph();
 }
@@ -260,7 +251,7 @@ function updateSidebar() {
 
 		case NODE_MODE:
 
-		d3.select("#cta").text("Clicca su un altro nodo per vedere la relazione");
+		// d3.select("#cta").text("Clicca su un altro nodo per vedere la relazione");
 		// node info
 		d3.select("#edge-source").call(fadeIn);
 		d3.select("#edge-target").call(fadeOut);
@@ -269,7 +260,6 @@ function updateSidebar() {
 		break;
 
 		case LINK_MODE:
-		d3.select("#cta").text("Clicca ovunque per tornare indietro");
 		d3.select("#edge-source").call(fadeIn);
 		d3.select("#edge-target").call(fadeIn);
 		d3.select("#edge-info").call(fadeIn);
@@ -390,9 +380,6 @@ function updateEdgeStrokes() {
 				el
 				.attr("stroke-width", strokeScale(d.weight))
 				.attr("stroke", `url(#${gradientName})`)
-				// .attr("stroke", isActive ? `url(#${gradientName})` : "#ddd");
-				// .attr("stroke-width", isActive ? strokeScale(d.weight) : 1)
-				// .transition()
 				.style("opacity", isActive ? 1 : 0)
 				break;
 			}
@@ -401,9 +388,7 @@ function updateEdgeStrokes() {
 				let isLinking = (d.target==selectedTarget || d.source==selectedTarget);
 				el
 				.attr("stroke-width", isActive && isLinking ? strokeScale(d.weight) : 1)
-				// .transition()
-				.style("opacity", isActive && isLinking ? 1 : 0)
-				// .attr("stroke", isLinking  ? `url(#${gradientName})` : "rgba(0,0,0,0)")
+				.style("opacity", isActive && isLinking ? 1 : 0);
 				break;
 			}
 		}
@@ -414,6 +399,7 @@ function updateEdgeStrokes() {
 
 
 function onNodeDown(d) {
+
 	switch(state) {
 
 		case IDLE:
@@ -433,7 +419,10 @@ function onNodeDown(d) {
 		break;
 
 		case LINK_MODE:
-		return;
+		selectedSource = d;
+		selectedTarget = null;
+		state = NODE_MODE;
+		break;
 
 	}
 
