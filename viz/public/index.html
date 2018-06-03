@@ -2,35 +2,69 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css?family=EB+Garamond:500" rel="stylesheet">
+  <link rel="stylesheet" href="tachyons.min.css">
   <link rel="stylesheet" href="main.css">
 </head>
 
 
 <body>
 
-  <div id="title">
-    <h2>Distanza lessicale tra politici italiani su Twitter</h2>
-    <p>Clicca su un cerchio per esplorare i collegamenti tra politici.</p>
-    <div id="sidebar">
-      <div id="node-info">
-        <h2 id="node-name"></h2>
-        <p id="node-party"></p>
-        <ul id="node-most-used"></ul>
+  <div class="pa4"  id="title">
+
+
+    <h1 class="f1">Distanza lessicale tra politici italiani su Twitter</h1>
+    <p class="mt0 mb5" id="cta">Clicca su un cerchio per esplorare i collegamenti tra politici.</p>
+    
+    <div class="absolute r-0" id="sidebar">
+
+      <div id="edge-source">
+
+        <div class="mb4 flex">
+          <div class="mr4 sidebar-nodeimage"></div>
+          <div>
+            <h2 class="sidebar-nodename"></h2>
+            <span class="node-party"></span>, <span class="sidebar-nodetweets"></span>
+            <p class="node-most-used"></p>
+          </div>
+        </div>
+
       </div>
 
-      <div id="edge-info">
-        <h2 id="edge-names"></h2>
-        <b>Parole importanti per entrambi</b>
-        <ul id="edge-most-similar"></ul>
-        <b>Parole meno importanti</b>
-        <ul id="edge-most-different"></ul>
+      <div id="edge-target">
+
+        <div class="mb4 flex">
+          <div class="mr4 sidebar-nodeimage"></div>
+          <div>
+            <h2 class="sidebar-nodename"></h2>
+            <span class="node-party"></span>, <span class="sidebar-nodetweets"></span>
+            <p class="node-most-used"></p>
+          </div>
+        </div>
+
       </div>
+
+
+      <div  id="edge-info">
+        <div class="flex mt4">
+          <div class="mr4">
+            <h3>Parole discriminanti</h3>
+            <ul id="edge-most-similar"></ul>
+          </div>
+          <div>
+            <h3>Parole non discriminanti</h3>
+            <ul id="edge-most-different"></ul>
+          </div>
+        </div>
+      </div>
+
     </div>
+
   </div>
 
   <div id="container">
     <svg width="100%" height="100%"></svg>
-    
+
   </div>
 </div>
 

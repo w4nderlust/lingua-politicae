@@ -5,6 +5,8 @@ body, html {
   height:100%;
   margin:0;
   overflow: hidden;
+  background: black;
+  color:#ddd;
 }
 
 body * {
@@ -15,20 +17,16 @@ body * {
   width:100%;
   height:100%;
 }
+
 #container, #title {
   position: absolute;
   left:0;
   top:0;
 }
 
-#title {
-  padding:2rem;
-  padding-top:1rem;
-  padding-bottom:0;
-}
-
-#title h2{
-  margin: 0;
+#title h1, h2{
+  font-weight: 100;
+  font-family: 'EB Garamond', serif;
 }
 
 #legenda {
@@ -51,26 +49,44 @@ body * {
   left:0;
 }
 .nodebg {
-  background: white;
 }
 .nodeimage {
   position: absolute;
   top:0;
   left:0;
   background-size: cover;
-  /*filter: grayscale(100%);*/
 }
 
+
 /* sidebar */
-#sidebar {
-  font-size:.8rem;
-  pointer-events: none;
-  background: rgba(255,255,255,.95);
-  /*width:30%;*/
+
+#edge-source, #edge-target, #node-info, #edge-info {
+  visibility:hidden;
 }
+
+
+#sidebar .sidebar-nodeimage {
+  background-size: cover;
+  width:5rem; 
+  height:5rem;
+  border-radius: 50%;
+}
+
 
 #sidebar ul, #sidebar li{
   list-style-type: none;
   margin:0;
   padding:0;
+}
+
+#sidebar li {
+  margin-top:.5rem;
+}
+
+#sidebar h3 {
+  margin-top:2rem;
+}
+
+.edge {
+  mix-blend-mode: lighten;
 }
