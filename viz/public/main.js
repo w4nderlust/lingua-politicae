@@ -284,6 +284,7 @@ function updateSidebar() {
 		// append words in common
 
 		d3.select("#edge-most-similar")
+		.html("")
 		.selectAll("li")
 		.data(selectedEdge.words.most_similar)
 		.enter()
@@ -291,6 +292,7 @@ function updateSidebar() {
 		.text(d=>d[0]);
 
 		d3.select("#edge-most-different")
+		.html("")
 		.selectAll("li")
 		.data(selectedEdge.words.most_different)
 		.enter()
