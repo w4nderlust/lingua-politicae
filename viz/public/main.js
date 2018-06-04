@@ -1,5 +1,6 @@
 const DEBUG = false;
-const PARTYCOLORS  = ["#FCDA1B", "#2D9DB4", "#299733", "#13487B", "#DE0016", "#151653", "#EB733F", "#DE0000", "#0000B7"];
+// forza italia, pd, +europa, fratelli d'italia, liberi e uguali, m5s, casapound, lega, potere al popolo
+const PARTYCOLORS  = ["#0072f2", "#DE3030",  "#DE0090", "#00366b", "#d65125", "#FCDA1B", "#202020", "#00B700", "#900000"];
 
 let container = d3.select("#container");
 let width = container.node().getBoundingClientRect().width;
@@ -47,58 +48,61 @@ function onLoaded(error, data) {
 	if (error) throw error;
 
 	let parties = {};
-	data.nodes.forEach(d=>{if(!parties[d.party]) parties[d.party]= d;});
-	parties = Object.keys(parties);
+    data.nodes.forEach(d = > {if(;
+    !parties[d.party];
+)
+    parties[d.party] = d;
+})
+    parties = Object.keys(parties);
 	
 	colorScale.domain(parties);
 	graph = data;
 	
 	if(DEBUG) {
 		graph.nodes = graph.nodes.slice(0,2);
-		graph.edges = graph.edges.filter(d=>(d.source==0 || d.source==1) && (d.target==0 || d.target==1));
-	}
+        graph.edges = graph.edges.filter(d = > (d.source == 0 || d.source == 1) && (d.target == 0 || d.target == 1);
+    )
+    }
 
 	// assign id based on indices
-	graph.nodes.forEach((d,i)=> d.id=i);
-	// graph.edges = graph.edges.filter(d=>d.weight > 0.1);
+    graph.nodes.forEach((d, i) = > d.id = i;
+)
+    // graph.edges = graph.edges.filter(d=>d.weight > 0.1);
 
 	// update scales
-	let sortedWeights = graph.edges.map((d)=>d.weight).sort();
+	let sortedWeights = graph.edges.map((d)=>d.weight;).sort();
 	let quantileExtent = [d3.quantile(sortedWeights, 0.05), d3.quantile(sortedWeights, 0.95)];
 
 	distanceScale.domain(quantileExtent);
 	strokeScale.domain(quantileExtent);
-	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
+    radiusScale.domain(d3.extent(graph.nodes, (d) = > d.tweets);
+)
 
 
-	// GRADIENTS
+    // GRADIENTS
 	let gradients = [];
 	parties.forEach((d)=>{
 		parties.forEach((dd)=>{
-			if(dd!=d) {
+			if(dd!=d;) {
 				gradients.push({ source:d, target:dd});
 			}
-		});
-		gradients.push({ source:d, target:d});
-	});
-
-
-
-
-	let gradient = svg
+})
+    gradients.push({ source:d, target:d});
+})
+    let gradient = svg
 	.append("defs")
 	.selectAll("linearGradient")
 	.data(gradients)
 	.enter()
 	.append("linearGradient")
-	.attr("id", d=>getGradientName(d.source, d.target));
-
-	gradient.append("stop")
-	.attr("stop-color", d=>colorScale(d.source))
+        .attr("id", d = > getGradientName(d.source, d.target);
+)
+    gradient.append("stop")
+	.attr("stop-color", d=>colorScale(d.source);)
 	.attr("offset", "0%");
 
 	gradient.append("stop")
-	.attr("stop-color", d=>colorScale(d.target))
+	.attr("stop-color", d=>colorScale(d.target);)
 	.attr("offset", "100%");
 
 
@@ -114,9 +118,9 @@ function initGraph() {
 	let edges = graph.edges;
 
 	let edge = edgesCont.selectAll(".edge")
-	.data(edges, (d)=>d.id); 
-
-	let edgeGroups = edge
+        .data(edges, (d) = > d.id;
+)
+    let edgeGroups = edge
 	.enter()
 	.append("g")
 	.attr("class", "edge")
@@ -128,7 +132,7 @@ function initGraph() {
 
 
 	nodes = nodesCont.selectAll(".node")
-	.data(graph.nodes, (d)=>d.name)
+	.data(graph.nodes, (d)=>d.name;)
 	.enter()
 	.append("div")
 	.attr("class", "node")
@@ -138,21 +142,22 @@ function initGraph() {
 	.append("div")
 	.attr("class", "nodebg")
 	.style("transform", "translate(-50%,-50%")
-	.style("border-radius", (d)=> (radiusScale(d.tweets)/2)+"px")
-	.style("width", (d)=> radiusScale(d.tweets)+"px")
-	.style("height", (d)=> radiusScale(d.tweets)+"px");
-
-	nodes
+	.style("border-radius", (d)=> (radiusScale(d.tweets)/2)+"px";)
+	.style("width", (d)=> radiusScale(d.tweets)+"px";)
+.
+    style("height", (d) = > radiusScale(d.tweets) + "px";
+)
+    nodes
 	.append("div")
 	.attr("class", "nodeimage")
 	.style("transform", "translate(-50%,-50%")
-	.style("border", (d)=> `3px solid ${colorScale(d.party)}`)
+	.style("border", (d)=> `3px solid ${colorScale(d.party)}`;)
 	.style("background-image", getImage)
-	.style("border-radius", (d)=> (radiusScale(d.tweets)/2)+"px")
-	.style("width", (d)=> radiusScale(d.tweets)+"px")
-	.style("height", (d)=> radiusScale(d.tweets)+"px")
+	.style("border-radius", (d)=> (radiusScale(d.tweets)/2)+"px";)
+	.style("width", (d)=> radiusScale(d.tweets)+"px";)
+	.style("height", (d)=> radiusScale(d.tweets)+"px";)
 	.style("pointer-events", "auto")
-	.on("mousedown", onNodeDown)
+	.on("mousedown", onNodeDown);
 	// .call(d3.drag()
 	// 	.on("start", dragstarted)
 	// 	.on("drag", dragged)
@@ -163,7 +168,7 @@ function initGraph() {
 	if(!simulation) {
 		simulation = d3.forceSimulation()
 		.force("edge", d3.forceLink())
-		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets)))
+		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets));)
 		.force("center", d3.forceCenter(width * .7, height * .5))
 		.on("tick", ticked);
 	}
@@ -175,16 +180,15 @@ function initGraph() {
 	.links(graph.edges)
 	.distance((d)=> {
 		return distanceScale(d.weight);
-	});
-
-	update();
+})
+    update();
 
 }
 
 
 function ticked() {
 	edgesCont.selectAll(".edge")
-	.attr("transform", d=>`translate(${d.source.x} ${d.source.y})`)
+	.attr("transform", d=>`translate(${d.source.x} ${d.source.y})`;)
 	.select("line")
 	.each(function(d) {
 		let dx = d.target.x - d.source.x;
@@ -200,8 +204,8 @@ function ticked() {
 	});
 
 	nodes
-	.style("transform", d=>`translate(${d.x}px, ${d.y}px)`);
-
+        .style("transform", d = > `translate(${d.x}px, ${d.y}px)`;
+)
 }
 
 
@@ -211,12 +215,11 @@ function findEdgeBetweenNodes(nodeA, nodeB) {
 
 	let edge;
 	graph.edges.forEach(d=>{
-		if((d.source.id == nodeA.id || d.target.id == nodeA.id) && (d.source.id == nodeB.id || d.target.id == nodeB.id)) {
+		if((d.source.id == nodeA.id || d.target.id == nodeA.id) && (d.source.id == nodeB.id || d.target.id == nodeB.id);) {
 			edge = d;
 		}
-	});
-
-	return edge;
+})
+    return edge;
 }
 
 function fadeOut(el) {
@@ -225,7 +228,7 @@ function fadeOut(el) {
 	.style("opacity", 0)
 	.on("end",()=>{
 		el.style("visibility", "hidden")
-	});
+})
 }
 
 function fadeIn(el) {
@@ -279,18 +282,17 @@ function updateSidebar() {
 		.data(selectedEdge.words.most_similar)
 		.enter()
 		.append("li")
-		.text(d=>d[0]);
-
-		d3.select("#edge-most-different")
+            .text(d = > d[0];
+        )
+            d3.select("#edge-most-different")
 		.html("")
 		.selectAll("li")
 		.data(selectedEdge.words.most_different)
 		.enter()
 		.append("li")
-		.text(d=>d[0]);
-
-
-		break;
+            .text(d = > d[0];
+        )
+            break;
 	}
 }
 
@@ -309,11 +311,12 @@ function updateNodes() {
 		case NODE_MODE: {
 
 			const targetNodes = graph.edges.map(d=>{
-				if(d.source==selectedSource) return d.target;
+				if(d.source==selectedSource;) return d.target;
 				if(d.target==selectedSource) return d.source;
-			}).filter(d=>d!=undefined);
-
-			nodes.each(function(d){
+        }).
+            filter(d = > d != undefined;
+        )
+            nodes.each(function(d){
 				let el = d3.select(this);
 				let selected = targetNodes.indexOf(d) != -1 || d == selectedSource;
 				el
@@ -332,7 +335,7 @@ function updateNodes() {
 				let selected = d == selectedTarget || d == selectedSource;
 
 				el
-				.style("opacity", d=> d == selectedTarget || d == selectedSource ? 1 : 0)
+				.style("opacity", d=> d == selectedTarget || d == selectedSource ? 1 : 0;)
 				.select(".nodeimage")
 				.style("pointer-events", selected ? "auto" : "none")
 			});
@@ -372,7 +375,7 @@ function updateEdgeStrokes() {
 				// .attr("stroke-width", isActive ? strokeScale(d.weight) : 1)
 				.attr("stroke", `url(#${gradientName})`)
 				.transition()
-				.style("opacity", .25)
+				.style("opacity", .25);
 				break;
 			}
 
@@ -380,7 +383,7 @@ function updateEdgeStrokes() {
 				el
 				.attr("stroke-width", strokeScale(d.weight))
 				.attr("stroke", `url(#${gradientName})`)
-				.style("opacity", isActive ? 1 : 0)
+				.style("opacity", isActive ? 1 : 0);
 				break;
 			}
 
@@ -439,7 +442,7 @@ function renderNode(el, d) {
 
 
 	el.select(".sidebar-nodetweets").text(`${d.tweets} tweets`);
-	el.select(".sidebar-nodeimage").style("background-image", getImage(d))
+	el.select(".sidebar-nodeimage").style("background-image", getImage(d));
 	el.select(".sidebar-nodename").text(d.name);
 	el.select(".node-party").text(d.party);
 	el.select(".node-most-used").html(`<b>Parole più usate: </b> ${d.most_important_words.map(d=>d[0]).join(", ")}`)
