@@ -221,43 +221,94 @@ print(
 # Calculating terms per edge
 print("Calculating terms per edge...")
 t0 = time()
+
+
+def weighted_distance(a, b):
+    return (1 + np.absolute(a - b)) / np.sqrt((a + 1) * (b + 1))
+
+
 terms_per_edge_matrix = {}
 for i in range(len(politicians_sorted)):
     for j in range(i + 1, len(politicians_sorted)):
+        # proto_politician_i = np.squeeze(np.asarray(politician_proto[politicians_sorted[i]]))
+        # proto_politician_i /= np.linalg.norm(proto_politician_i)
+        #
+        # proto_politician_j = np.squeeze(np.asarray(politician_proto[politicians_sorted[j]]))
+        # proto_politician_j /= np.linalg.norm(proto_politician_j)
+        #
+        # distance = np.absolute(proto_politician_i - proto_politician_j)
+        # sorted_word_ids = np.argsort(distance)
+        #
+        # sorted_proto_politician_i = proto_politician_i[sorted_word_ids]
+        # sorted_proto_politician_j = proto_politician_j[sorted_word_ids]
+        #
+        # words_used_by_politician_i = sorted_proto_politician_i != 0
+        # words_used_by_politician_j = sorted_proto_politician_j != 0
+        # words_used_by_both = np.logical_and(words_used_by_politician_i, words_used_by_politician_j)
+        #
+        # filtered_sorted_word_ids = sorted_word_ids[words_used_by_both]
+        #
+        # # normalization
+        # filtered_distance = distance[filtered_sorted_word_ids]
+        # z_normalized_filtered_distance = stats.zscore(filtered_distance)
+        #
+        # most_similar_weights = -z_normalized_filtered_distance[:terms_per_edge]
+        # most_similar_word_ids = filtered_sorted_word_ids[:terms_per_edge]
+        # most_similar_words = [vocab[i] for i in most_similar_word_ids]
+        # most_similar = list(zip(most_similar_words, most_similar_weights))
+        #
+        # most_different_weights = -z_normalized_filtered_distance[-terms_per_edge:]
+        # most_different_word_ids = filtered_sorted_word_ids[-terms_per_edge:]
+        # most_different_words = [vocab[i] for i in most_different_word_ids]
+        # most_different = list(zip(most_different_words, most_different_weights))
+        #
+        # terms_per_edge_matrix[(politicians_sorted[i], politicians_sorted[j])] = {"most_similar": most_similar,
+        #                                                                          "most_different": most_different}
+
         proto_politician_i = np.squeeze(np.asarray(politician_proto[politicians_sorted[i]]))
-        proto_politician_i /= np.linalg.norm(proto_politician_i)
-
         proto_politician_j = np.squeeze(np.asarray(politician_proto[politicians_sorted[j]]))
-        proto_politician_j /= np.linalg.norm(proto_politician_j)
 
-        distance = np.absolute(proto_politician_i - proto_politician_j)
-        sorted_word_ids = np.argsort(distance)
+        difference = proto_politician_i - proto_politician_j
+        distance = weighted_distance(proto_politician_i, proto_politician_j)
+        z_normalized_difference = stats.zscore(difference)
 
-        sorted_proto_politician_i = proto_politician_i[sorted_word_ids]
-        sorted_proto_politician_j = proto_politician_j[sorted_word_ids]
+        sorted_difference_word_ids = np.argsort(difference)
+        sorted_distance_word_ids = np.argsort(distance)
+
+        # get top k similar words
+        sorted_proto_politician_i = proto_politician_i[sorted_distance_word_ids]
+        sorted_proto_politician_j = proto_politician_j[sorted_distance_word_ids]
 
         words_used_by_politician_i = sorted_proto_politician_i != 0
-        words_used_by_politician_j = sorted_proto_politician_i != 0
+        words_used_by_politician_j = sorted_proto_politician_j != 0
         words_used_by_both = np.logical_and(words_used_by_politician_i, words_used_by_politician_j)
 
-        filtered_sorted_word_ids = sorted_word_ids[words_used_by_both]
+        filtered_sorted_word_ids = sorted_distance_word_ids[words_used_by_both]
+        filtered_sorted_z_normalized_difference = z_normalized_difference[filtered_sorted_word_ids]
 
-        # normalization
-        filtered_distance = distance[filtered_sorted_word_ids]
-        z_normalized_filtered_distance = stats.zscore(filtered_distance)
+        most_correlated_with_both_weights = filtered_sorted_z_normalized_difference[:terms_per_edge]
+        most_correlated_with_both_word_ids = filtered_sorted_word_ids[:terms_per_edge]
+        most_correlated_with_both_words = [vocab[i] for i in most_correlated_with_both_word_ids]
+        most_correlated_with_both = list(zip(most_correlated_with_both_words, most_correlated_with_both_weights))
 
-        most_similar_weights = -z_normalized_filtered_distance[:terms_per_edge]
-        most_similar_word_ids = filtered_sorted_word_ids[:terms_per_edge]
-        most_similar_words = [vocab[i] for i in most_similar_word_ids]
-        most_similar = list(zip(most_similar_words, most_similar_weights))
+        # get dissimilar words
+        sorted_z_normalized_difference = z_normalized_difference[sorted_difference_word_ids]
 
-        most_different_weights = -z_normalized_filtered_distance[-terms_per_edge:]
-        most_different_word_ids = filtered_sorted_word_ids[-terms_per_edge:]
-        most_different_words = [vocab[i] for i in most_different_word_ids]
-        most_different = list(zip(most_different_words, most_different_weights))
+        most_correlated_with_i_weights = sorted_z_normalized_difference[-terms_per_edge:]
+        most_correlated_with_i_ids = sorted_difference_word_ids[-terms_per_edge:]
+        most_correlated_with_i_words = [vocab[i] for i in most_correlated_with_i_ids]
+        most_correlated_with_i = list(zip(most_correlated_with_i_words, most_correlated_with_i_weights))
 
-        terms_per_edge_matrix[(politicians_sorted[i], politicians_sorted[j])] = {"most_similar": most_similar,
-                                                                                 "most_different": most_different}
+        most_correlated_with_j_weights = sorted_z_normalized_difference[:terms_per_edge]
+        most_correlated_with_j_ids = sorted_difference_word_ids[:terms_per_edge]
+        most_correlated_with_j_words = [vocab[i] for i in most_correlated_with_j_ids]
+        most_correlated_with_j = list(zip(most_correlated_with_j_words, most_correlated_with_j_weights))
+
+        terms_per_edge_matrix[(politicians_sorted[i], politicians_sorted[j])] = {
+            "most_correlated_with_both": most_correlated_with_both,
+            "most_correlated_with_source": most_correlated_with_i,
+            "most_correlated_with_target": most_correlated_with_j}
+
 print("done in {:0.4f}s".format(time() - t0))
 
 # Calculating terms per edge
@@ -266,10 +317,10 @@ t0 = time()
 terms_per_node_matrix = {}
 for i in range(len(politicians_sorted)):
     proto_politician_i = np.squeeze(np.asarray(politician_proto[politicians_sorted[i]]))
-    sorted_word_ids = np.argsort(proto_politician_i)
-    sorted_proto_politician_i = proto_politician_i[sorted_word_ids]
+    sorted_distance_word_ids = np.argsort(proto_politician_i)
+    sorted_proto_politician_i = proto_politician_i[sorted_distance_word_ids]
     words_used_by_politician_i = np.logical_not(sorted_proto_politician_i == 0)
-    filtered_sorted_word_ids = sorted_word_ids[words_used_by_politician_i]
+    filtered_sorted_word_ids = sorted_distance_word_ids[words_used_by_politician_i]
 
     most_important_word_ids = filtered_sorted_word_ids[-terms_per_node:]
     most_important_weights = proto_politician_i[most_important_word_ids]
