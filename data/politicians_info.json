@@ -2,121 +2,139 @@
   {
     "name": "Antonio Tajani",
     "party": "Forza Italia",
-    "twitter": "@Antonio_Tajani"
+    "twitter": "@Antonio_Tajani",
+    "facebook": "antonio.tajani"
   },
   {
     "name": "Carlo Calenda",
     "party": "PD",
-    "twitter": "@CarloCalenda"
+    "twitter": "@CarloCalenda",
+    "facebook": "ccalenda"
   },
   {
     "name": "Alessandro Fusacchia",
     "party": "+Europa",
-    "twitter": "@FusacchiA"
+    "twitter": "@FusacchiA",
+    "facebook": "685935013"
   },
   {
     "name": "Giorgia Meloni",
     "party": "Fratelli d Italia",
-    "twitter": "@GiorgiaMeloni"
+    "twitter": "@GiorgiaMeloni",
+    "facebook": "giorgiameloni.paginaufficiale"
   },
   {
     "name": "Giovanni Toti",
     "party": "Forza Italia",
-    "twitter": "@GiovanniToti"
+    "twitter": "@GiovanniToti",
+    "facebook": "giovatoti"
   },
   {
     "name": "Guido Crosetto",
     "party": "Fratelli d Italia",
-    "twitter": "@GuidoCrosetto"
+    "twitter": "@GuidoCrosetto",
+    "facebook": "135485623223178"
   },
   {
     "name": "Ignazio LaRussa",
     "party": "Fratelli d Italia",
-    "twitter": "@Ignazio_LaRussa"
+    "twitter": "@Ignazio_LaRussa",
+    "facebook": "Sen.LaRussa"
   },
   {
     "name": "Paolo Gentiloni",
     "party": "PD",
-    "twitter": "@PaoloGentiloni"
+    "twitter": "@PaoloGentiloni",
+    "facebook": "paologentiloni"
   },
   {
     "name": "Pietro Grasso",
     "party": "Liberi e Uguali",
-    "twitter": "@PietroGrasso"
+    "twitter": "@PietroGrasso",
+    "facebook": "PietroGrasso"
   },
   {
     "name": "Roberto Fico",
     "party": "M5S",
-    "twitter": "@Roberto_Fico"
+    "twitter": "@Roberto_Fico",
+    "facebook": "roberto.fico.5"
   },
   {
     "name": "Alessandro Di Battista",
     "party": "M5S",
-    "twitter": "@ale_dibattista"
+    "twitter": "@ale_dibattista",
+    "facebook": "1039107164"
   },
   {
     "name": "Beppe Grillo",
     "party": "M5S",
-    "twitter": "@beppe_grillo"
+    "twitter": "@beppe_grillo",
+    "facebook": "beppegrillo.it"
   },
   {
     "name": "Silvio Berlusconi",
     "party": "Forza Italia",
-    "twitter": "@berlusconi"
+    "twitter": "@berlusconi",
+    "facebook": "SilvioBerlusconi"
   },
   {
     "name": "Giuseppe Civati",
     "party": "Liberi e Uguali",
-    "twitter": "@civati"
+    "twitter": "@civati",
+    "facebook": "giuseppecivati"
   },
   {
     "name": "Simone Di Stefano",
     "party": "Casa Pound",
-    "twitter": "@distefanoTW"
+    "twitter": "@distefanoTW",
+    "facebook": "distefanocasapound"
   },
   {
     "name": "Emma Bonino",
     "party": "+Europa",
-    "twitter": "@emmabonino"
+    "twitter": "@emmabonino",
+    "facebook": "EmmaBoninoOfficial"
   },
   {
     "name": "Maurizio Gasparri",
     "party": "Forza Italia",
-    "twitter": "@gasparripdl"
+    "twitter": "@gasparripdl",
+    "facebook": "gasparri.it"
   },
   {
     "name": "Laura Boldrini",
     "party": "Liberi e Uguali",
-    "twitter": "@lauraboldrini"
+    "twitter": "@lauraboldrini",
+    "facebook": "325228170920721"
   },
   {
     "name": "Luigi Di Maio",
     "party": "M5S",
-    "twitter": "@luigidimaio"
-  },
-  {
-    "name": "Mara Carfagna",
-    "party": "Forza Italia",
-    "twitter": "@mara_carfagna"
+    "twitter": "@luigidimaio",
+    "facebook": "LuigiDiMaio"
   },
   {
     "name": "Matteo Renzi",
     "party": "PD",
-    "twitter": "@matteorenzi"
+    "twitter": "@matteorenzi",
+    "facebook": "matteorenziufficiale"
   },
   {
     "name": "Matteo Salvini",
     "party": "Lega Nord",
-    "twitter": "@matteosalvinimi"
+    "twitter": "@matteosalvinimi",
+    "facebook": "salviniofficial"
   },
   {
     "name": "Potere Al Popolo",
     "party": "Potere Al Popolo",
-    "twitter": "@potere_alpopolo"
+    "twitter": "@potere_alpopolo",
+    "facebook": "poterealpopolo.org"
   },
   {
     "name": "Renato Brunetta",
     "party": "Forza Italia",
-    "twitter": "@renatobrunetta"
+    "twitter": "@renatobrunetta",
+    "facebook": "renato.brunetta"
   }
 ]
