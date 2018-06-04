@@ -1,6 +1,6 @@
 const DEBUG = false;
 // forza italia, pd, +europa, fratelli d'italia, liberi e uguali, m5s, casapound, lega, potere al popolo
-const PARTYCOLORS  = ["#0072f2", "#DE3030",  "#DE0090", "#00366b", "#d65125", "#FCDA1B", "#202020", "#00B700", "#900000"];
+const PARTYCOLORS  = ["#0077FF", "#DE3030",  "#DE0090", "#00366b", "#d65125", "#FCDA1B", "#202020", "#00B700", "#900000"];
 
 let container = d3.select("#container");
 let width = container.node().getBoundingClientRect().width;
@@ -40,39 +40,23 @@ let simulation;
 
 
 // START
-d3.json("politicians_graph.json", onLoaded);
+d3.json("politicians_graph.json", init);
 
 
 
-function onLoaded(error, data) {
+function init(error, data) {
+	
 	if (error) throw error;
 
+	graph = data;
+
+	// find parties and assign colors
 	let parties = {};
 	data.nodes.forEach(d=>{if(!parties[d.party]) parties[d.party]= d;});
 	parties = Object.keys(parties);
-	
 	colorScale.domain(parties);
-	graph = data;
-	
-	if(DEBUG) {
-		graph.nodes = graph.nodes.slice(0,2);
-		graph.edges = graph.edges.filter(d=>(d.source==0 || d.source==1) && (d.target==0 || d.target==1));
-	}
 
-	// assign id based on indices
-	graph.nodes.forEach((d,i)=> d.id=i);
-	// graph.edges = graph.edges.filter(d=>d.weight > 0.1);
-
-	// update scales
-	let sortedWeights = graph.edges.map((d)=>d.weight).sort();
-	let quantileExtent = [d3.quantile(sortedWeights, 0.05), d3.quantile(sortedWeights, 0.95)];
-
-	distanceScale.domain(quantileExtent);
-	strokeScale.domain(quantileExtent);
-	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
-
-
-	// GRADIENTS
+	// gradients
 	let gradients = [];
 	parties.forEach((d)=>{
 		parties.forEach((dd)=>{
@@ -82,9 +66,6 @@ function onLoaded(error, data) {
 		});
 		gradients.push({ source:d, target:d});
 	});
-
-
-
 
 	let gradient = svg
 	.append("defs")
@@ -103,7 +84,17 @@ function onLoaded(error, data) {
 	.attr("offset", "100%");
 
 
-	edgesCont = svg.append("g").attr("id", "edgesCont");
+	// assign id based on indices
+	graph.nodes.forEach((d,i)=> d.id=i);
+
+	// update scales
+	let sortedWeights = graph.edges.map((d)=>d.weight).sort();
+	let quantileExtent = [d3.quantile(sortedWeights, 0.05), d3.quantile(sortedWeights, 0.95)];
+
+	distanceScale.domain(quantileExtent);
+	strokeScale.domain(quantileExtent);
+	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
+
 
 
 	initGraph();
@@ -111,6 +102,9 @@ function onLoaded(error, data) {
 
 
 function initGraph() {
+
+	edgesCont = svg.append("g").attr("id", "edgesCont");
+
 
 	let edges = graph.edges;
 
@@ -125,6 +119,17 @@ function initGraph() {
 	
 	edgeGroups
 	.append("line");
+
+	svg.on("mousedown touchend", ()=>{
+
+		if(state == LINK_MODE || state == NODE_MODE) {
+			selectedSource = null;
+			selectedTarget = null;
+			selectedEdge = null;
+			state = IDLE;
+			update();
+		}
+	}, true);
 
 
 
@@ -160,14 +165,11 @@ function initGraph() {
 	// 	.on("end", dragended));
 
 
-
-	if(!simulation) {
-		simulation = d3.forceSimulation()
-		.force("edge", d3.forceLink())
-		.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets)))
-		.force("center", d3.forceCenter(width * .7, height * .5))
-		.on("tick", ticked);
-	}
+	simulation = d3.forceSimulation()
+	.force("edge", d3.forceLink())
+	.force("charge", d3.forceCollide().radius((d)=>radiusScale(d.tweets)))
+	.force("center", d3.forceCenter(width * .7, height * .5))
+	.on("tick", ticked);
 
 	simulation.nodes(graph.nodes);
 
@@ -284,15 +286,22 @@ function updateSidebar() {
 }
 
 function appendWords() {
+
+	let isSourceFirst = selectedSource.id < selectedTarget.id;
+	let correlatedSourceWords = isSourceFirst ? selectedEdge.words.most_correlated_with_source : selectedEdge.words.most_correlated_with_target;
+	let correlatedTargetWords = !isSourceFirst ? selectedEdge.words.most_correlated_with_source : selectedEdge.words.most_correlated_with_target;
+
+
+
 	let $correlated_with_source = d3.select("#edge-most_correlated_with_source");
 
 	$correlated_with_source
 	.select("h3")
-	.text(`${selectedSource.name}`)
+	.text(`${selectedSource.name}`);
 
 	$correlated_with_source
 	.select("ul")
-	.datum(selectedEdge.words.most_correlated_with_source)
+	.datum(correlatedSourceWords)
 	.call(populateList);
 
 	let $correlated_with_both = d3.select("#edge-most_correlated_with_both");
@@ -316,7 +325,7 @@ function appendWords() {
 
 	$correlated_with_target
 	.select("ul")
-	.datum(selectedEdge.words.most_correlated_with_target)
+	.datum(correlatedTargetWords)
 	.call(populateList);
 
 
