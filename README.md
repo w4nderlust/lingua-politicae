@@ -1,5 +1,5 @@
 # lingua-politicae
-The goal of this project is to visualize ocial media data produced by politicians from different points of view.
+The goal of this project is to visualize social media data produced by politicians from different points of view.
 
 The first visualization we are working on represents each politician as a node in a graph and the weights of the strengh of their connection is proportional to how similar their use of language is on Twitter. It is inspired by [this visualization](https://trello-attachments.s3.amazonaws.com/59da8a7cce93f206776c1d12/59db53014b9d8b772ecfc033/6087102ce596d7f73e59771f8d5b62e6/lexical-distance-among-the-languages-of-europe-mid-size.png) of the lexical distance among different European languages.
 
