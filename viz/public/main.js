@@ -1,5 +1,6 @@
 const DEBUG = false;
-const PARTYCOLORS  = ["#FCDA1B", "#2D9DB4", "#299733", "#13487B", "#DE0016", "#151653", "#EB733F", "#DE0000", "#0000B7"];
+// forza italia, pd, +europa, fratelli d'italia, liberi e uguali, m5s, casapound, lega, potere al popolo
+const PARTYCOLORS  = ["#0072f2", "#DE3030",  "#DE0090", "#00366b", "#d65125", "#FCDA1B", "#202020", "#00B700", "#900000"];
 
 let container = d3.select("#container");
 let width = container.node().getBoundingClientRect().width;
@@ -273,26 +274,63 @@ function updateSidebar() {
 
 		// append words in common
 
-		d3.select("#edge-most-similar")
-		.html("")
-		.selectAll("li")
-		.data(selectedEdge.words.most_similar)
-		.enter()
-		.append("li")
-		.text(d=>d[0]);
+		appendWords();
 
-		d3.select("#edge-most-different")
-		.html("")
-		.selectAll("li")
-		.data(selectedEdge.words.most_different)
-		.enter()
-		.append("li")
-		.text(d=>d[0]);
+
 
 
 		break;
 	}
 }
+
+function appendWords() {
+	let $correlated_with_source = d3.select("#edge-most_correlated_with_source");
+
+	$correlated_with_source
+	.select("h3")
+	.text(`${selectedSource.name}`)
+
+	$correlated_with_source
+	.select("ul")
+	.datum(selectedEdge.words.most_correlated_with_source)
+	.call(populateList);
+
+	let $correlated_with_both = d3.select("#edge-most_correlated_with_both");
+
+	$correlated_with_both
+	.select("h3")
+	.text(`entrambe`);
+
+
+	$correlated_with_both
+	.select("ul")
+	.datum(selectedEdge.words.most_correlated_with_both)
+	.call(populateList);
+
+	let $correlated_with_target = d3.select("#edge-most_correlated_with_target");
+
+	$correlated_with_target
+	.select("h3")
+	.text(`${selectedTarget.name}`);
+
+
+	$correlated_with_target
+	.select("ul")
+	.datum(selectedEdge.words.most_correlated_with_target)
+	.call(populateList);
+
+
+	function populateList(el) {
+		el
+		.html("")
+		.selectAll("li")
+		.data(d=>d)
+		.enter()
+		.append("li")
+		.text(d=>d[0]);
+	}
+}
+
 
 function updateNodes() {
 
