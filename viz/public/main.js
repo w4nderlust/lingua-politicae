@@ -256,7 +256,7 @@ function updateSidebar() {
 		d3.select("#edge-source").call(fadeIn);
 		d3.select("#edge-target").call(fadeOut);
 		d3.select("#edge-info").call(fadeOut);
-		renderNode(d3.select("#edge-source"), selectedSource);
+		updateNodeInfo(d3.select("#edge-source"), selectedSource);
 		break;
 
 		case LINK_MODE:
@@ -268,8 +268,8 @@ function updateSidebar() {
 		d3.select("#edge-names").text(`${selectedSource.name} – ${selectedTarget.name}`);
 		d3.select("#similarity").text(selectedEdge.weight);
 
-		renderNode(d3.select("#edge-source"), selectedSource);
-		renderNode(d3.select("#edge-target"), selectedTarget);
+		updateNodeInfo(d3.select("#edge-source"), selectedSource);
+		updateNodeInfo(d3.select("#edge-target"), selectedTarget);
 
 		// append words in common
 
@@ -435,13 +435,13 @@ function update(){
 	updateSidebar();
 }
 
-function renderNode(el, d) {
+function updateNodeInfo(el, d) {
 
 
 	el.select(".sidebar-nodetweets").text(`${d.tweets} tweets`);
-	el.select(".sidebar-nodeimage").style("background-image", getImage(d))
+	el.select(".sidebar-nodeimage").style("background-image", getImage(d)).style("border", `3px solid ${colorScale(d.party)}`)
 	el.select(".sidebar-nodename").text(d.name);
-	el.select(".node-party").text(d.party);
+	el.select(".node-party").text(d.party).style("color", colorScale(d.party));
 	el.select(".node-most-used").html(`<b>Parole più usate: </b> ${d.most_important_words.map(d=>d[0]).join(", ")}`)
 
 

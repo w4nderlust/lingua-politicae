@@ -13,8 +13,8 @@ except:
 
 userCounter = 0
 
-start = datetime.datetime(2018, 1, 1)  # year, month, day
-end = datetime.datetime(2018, 1, 2)  # year, month, day
+start = datetime.datetime(2018, 3, 1)  # year, month, day
+end = datetime.datetime(2018, 6, 1)  # year, month, day
 
 # only edit these if you're having problems
 delay = 1  # time to wait on each page load before reading the page

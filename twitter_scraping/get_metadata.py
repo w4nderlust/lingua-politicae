@@ -34,16 +34,16 @@ def store(counter):
 
     all_data = []
     start = 0
-    end = 100
+    end = 200
     limit = len(ids)
-    i = math.ceil(limit / 100)
+    i = math.ceil(limit / 200)
 
     for go in range(i):
         print('currently getting {} - {}'.format(start, end))
         sleep(6)  # needed to prevent hitting API rate limit
         id_batch = ids[start:end]
-        start += 100
-        end += 100
+        start += 200
+        end += 200
         tweets = api.statuses_lookup(id_batch)
         for tweet in tweets:
             all_data.append(dict(tweet._json))
