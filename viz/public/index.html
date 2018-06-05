@@ -2,43 +2,53 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <link href="https://fonts.googleapis.com/css?family=EB+Garamond:500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond|Roboto" rel="stylesheet">
   <link rel="stylesheet" href="tachyons.min.css">
   <link rel="stylesheet" href="main.css">
 </head>
 
 
 <body>
+  
+  <div id="container">
+    <svg width="100%" height="100%"></svg>
+  </div>
+
 
   <div class="pa4"  id="title">
 
 
-    <h1 class="f1">Distanza lessicale tra politici italiani su Twitter</h1>
+    <h1 class="f1">Lingua Politicæ</h1>
     <p class="mt0 mb5" id="cta">Clicca su un cerchio per esplorare i collegamenti tra politici.</p>
     
-    <div class="absolute r-0" id="sidebar">
 
-      <div id="edge-source">
+    <div id="sidebar">
 
-        <div class="mb4 flex">
-          <div class="mr4 sidebar-nodeimage"></div>
-          <div>
-            <h2 class="mt0 sidebar-nodename"></h2>
-            <span class="node-party"></span>, <span class="sidebar-nodetweets"></span>
-            <p class="node-most-used"></p>
+      <div id="edge-source" class="flex items-center pa3 pl0">
+
+        <div class="flex">
+          <div class="flex items-center">
+            <div class="sidebar-nodeimage"></div>
+        </div>
+          <div class="ml3">
+            <h3 class="mv2 sidebar-nodename"></h3>
+            <p class="mv2"><span class="node-party"></span>, <span class="sidebar-nodetweets"></span></p>
+            <p class="mv2 node-most-used"></p>
           </div>
         </div>
 
       </div>
 
-      <div id="edge-target">
+      <div id="edge-target" class="flex items-center pa3 pl0">
 
-        <div class="mb4 flex">
-          <div class="mr4 sidebar-nodeimage"></div>
-          <div>
-            <h2 class="mt0 sidebar-nodename"></h2>
-            <span class="node-party"></span>, <span class="sidebar-nodetweets"></span>
-            <p class="node-most-used"></p>
+        <div class="flex">
+          <div class="flex items-center">
+            <div class="sidebar-nodeimage"></div>
+        </div>
+          <div class="ml3">
+            <h3 class="mv2 sidebar-nodename"></h3>
+            <p class="mv2"><span class="node-party"></span>, <span class="sidebar-nodetweets"></span></p>
+            <p class="mv2 node-most-used"></p>
           </div>
         </div>
 
@@ -46,22 +56,22 @@
 
 
 
-      <div  id="edge-info">
-        <h3 class="flex mt4 mb0">Parole correlate con:</h3>
+      <div class="mt5" id="edge-info">
+        <h2 class="flex mb0">Parole correlate con:</h2>
         <div class="flex">
           <div id="edge-most_correlated_with_source" class="mr4">
             <h3></h3>
-            <ul ></ul>
+            <ul class="list lh-copy"></ul>
           </div>
           
           <div id="edge-most_correlated_with_target"  class="mr4">
             <h3></h3>
-            <ul ></ul>
+            <ul class="list lh-copy"></ul>
           </div>
 
           <div id="edge-most_correlated_with_both" class="mr4">
             <h3></h3>
-            <ul ></ul>
+            <ul class="list lh-copy"></ul>
           </div>
         </div>
       </div>
@@ -70,10 +80,6 @@
 
   </div>
 
-  <div id="container">
-    <svg width="100%" height="100%"></svg>
-
-  </div>
 </div>
 
 <div id="legenda">

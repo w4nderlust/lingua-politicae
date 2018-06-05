@@ -35,12 +35,12 @@ politicians_info = {}
 with open(politicians_info_file_path, 'r') as politicians_info_file:
     politicians_info_list = json.load(politicians_info_file)
     for politician in politicians_info_list:
-        politicians_info[politician['facebook']] = politician
+        politicians_info[politician['twitter']] = politician
 
 
 # Utils
 def file2name(filename):
-    return filename.replace('_tweets', '').replace('.json', '')
+    return filename.replace('_facebook', '').replace('.json', '')
 
 
 def tokenize(text):

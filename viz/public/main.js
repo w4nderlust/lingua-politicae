@@ -273,10 +273,7 @@ function updateSidebar() {
 
 		updateNodeInfo(d3.select("#edge-source"), selectedSource);
 		updateNodeInfo(d3.select("#edge-target"), selectedTarget);
-
-		// append words in common
-
-		appendWords();
+		updateEdgeInfo();
 
 
 
@@ -285,7 +282,7 @@ function updateSidebar() {
 	}
 }
 
-function appendWords() {
+function updateEdgeInfo() {
 
 	let isSourceFirst = selectedSource.id < selectedTarget.id;
 	let correlatedSourceWords = isSourceFirst ? selectedEdge.words.most_correlated_with_source : selectedEdge.words.most_correlated_with_target;
@@ -297,7 +294,8 @@ function appendWords() {
 
 	$correlated_with_source
 	.select("h3")
-	.text(`${selectedSource.name}`);
+	.text(`${selectedSource.name}`)
+	.style("color", colorScale(selectedSource.party));
 
 	$correlated_with_source
 	.select("ul")
@@ -320,7 +318,8 @@ function appendWords() {
 
 	$correlated_with_target
 	.select("h3")
-	.text(`${selectedTarget.name}`);
+	.text(`${selectedTarget.name}`)
+	.style("color", colorScale(selectedTarget.party));
 
 
 	$correlated_with_target
@@ -487,9 +486,9 @@ function updateNodeInfo(el, d) {
 
 	el.select(".sidebar-nodetweets").text(`${d.tweets} tweets`);
 	el.select(".sidebar-nodeimage").style("background-image", getImage(d)).style("border", `3px solid ${colorScale(d.party)}`)
-	el.select(".sidebar-nodename").text(d.name);
-	el.select(".node-party").text(d.party).style("color", colorScale(d.party));
-	el.select(".node-most-used").html(`<b>Parole più usate: </b> ${d.most_important_words.map(d=>d[0]).join(", ")}`)
+	el.select(".sidebar-nodename").text(d.name).style("color", colorScale(d.party));
+	el.select(".node-party").text(d.party);
+	el.select(".node-most-used").html(`<span>Parole più usate: </span> ${d.most_important_words.map(d=>d[0]).join(", ")}`)
 
 
 }
