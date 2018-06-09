@@ -13,6 +13,11 @@
 
 <body>
 
+  <div id="tooltip">
+    <p id="names"></p>
+    <ul id="commonwords"></ul>
+  </div>
+
   <svg>
    <filter id="grayscale">
     <feColorMatrix type="matrix"
@@ -32,19 +37,18 @@
   const CELL_SIZE = 40;
   let xPos = d3.scaleLinear();
   let yPos = d3.scaleLinear();
-
+  let data;
   // TOOLTIP
-  let tooltip = d3.select("body")
-  .append("div")
+  let tooltip = d3.select("#tooltip")
   .style("position", "absolute")
   .style("z-index", "10")
   .style("visibility", "hidden")
   .style("background", "white")
-  .style("padding", ".5rem 1.rem")
-  .text("a simple tooltip");
+  .style("padding", ".5rem 1.rem");
 
-  function onLoaded(data) {
+  function onLoaded(json) {
 
+    data = json;
     const dataExtent = [1, data.nodes.length];
     const linkExtent = d3.extent(data.edges, (d)=>d.weight);
 
@@ -112,7 +116,9 @@
 
       el
       .selectAll("rect")
-      .data(data.nodes)
+      .data(data.nodes.map((ddd, i)=>{
+        return findEdgeBetweenNodes(index, i)
+      }))
       .enter()
       .append("rect")
       .classed("rect", true)
@@ -121,7 +127,7 @@
       .attr("x", (d,i)=>i*CELL_SIZE + startX)
       .attr("y", (d,i)=>index*CELL_SIZE + startY)
       .style("fill",(d,i)=> i==index ? "#000" : d3.interpolateBlues(getWeight(index, i)/quantile_extent[1]))
-      .on("mouseover", (d)=>updateEdgeTooltip(dd, d))
+      .on("mouseover", (d)=>updateEdgeTooltip(d))
       .on("mousemove", ()=>tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px"))
       .on("mouseout", (d)=>updateEdgeTooltip(null));
 
@@ -141,22 +147,56 @@
 
   }
 
+  function findEdgeBetweenNodes(nodeA, nodeB) {
+    let edge;
+    data.edges.forEach(d=>{
+      if((d.source == nodeA || d.target == nodeA) && (d.source == nodeB || d.target == nodeB)) {
+        edge = d;
+      }
+    });
 
-  function updateEdgeTooltip(d, dd) {
-    d3.select(d3.event.target).attr("stroke", d !== null ? "red": null)
+    return edge;
+  }
+  
+  function findNodeByIndex(i) {
+    return data.nodes.find(d=>d == i)
+  }
+
+  function updateEdgeTooltip(edge) {
+        console.log(edge);
+
+    d3.select(d3.event.target).attr("stroke", edge !== null ? "red": null)
 
     tooltip
-    .style("visibility", d !== null ? "visible" :"hidden")
-    .text(d? d.name +" vs " + dd.name : "");
+    .style("visibility", edge !== null ? "visible" :"hidden")
+    
+    if(edge) {
+
+      tooltip.select("#names").text( data.nodes[edge.source].name +" vs " + data.nodes[edge.target].name );
+
+      tooltip.select("#commonwords")
+      .datum(edge.words.most_correlated_with_both)
+      .call(populateList);
+
+    }
+    function populateList(el) {
+      el
+      .html("")
+      .selectAll("li")
+      .data(d=>d)
+      .enter()
+      .append("li")
+      .text(d=>d[0]);
+    }
 
 
     d3.selectAll(".images").selectAll("image").each(function(ddd, i,h) {
 
-      let deselected;
-      if(!d || !dd) {
-        deselected = true;
-      } else {
-        let name = ddd.groupindex == 1 ? d.name : dd.name;
+      let deselected  = true;
+      
+      if(edge) {
+
+        let name = ddd.groupindex == 1 ?  data.nodes[edge.source].name : data.nodes[edge.target].name;
         deselected = ddd.name != name 
       }
 
