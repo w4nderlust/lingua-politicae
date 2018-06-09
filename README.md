@@ -42,7 +42,7 @@ After completing the installation, enter `lingua-politicae` dir, activate you vi
 
     cd lingua-politicae
     source venv/bin/activate
-    python ml/tweet2graph.py
+    python -m ml.tweet2graph
 
 It will use the json files containing tweets in `data` in order to greate `politicians_graph.json`. This json file wil be created inside `xiz` and  will contain all the informations needed by the javascript script to visualize it in the browser.
 
