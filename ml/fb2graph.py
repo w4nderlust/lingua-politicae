@@ -17,9 +17,8 @@ from scipy import stats
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
-DATA_DIR = 'facebook/posts'
-politicians_info_file_path = 'data/politicians_info.json'
-graph_file_path = 'viz/public/politicians_graph.json'
+from globals import POLITICIANS_INFO_FILE_PATH, FACEBOOK_POSTS_DIRECTORY, POLITICIANS_GRAPH_FILE_PATH
+
 stopwords_file_path = 'ml/res/italian_stopwords_big.txt'
 english_stopwords_file_path = 'ml/res/english_stopwords.txt'
 tweet_stopwords = ['URL', 'ELLIPSIS', 'NUMBER', 'USERNAME']
@@ -32,7 +31,7 @@ clustering_algorithm = KMeans
 clustering_quality_measure = calinski_harabaz_score
 
 politicians_info = {}
-with open(politicians_info_file_path, 'r') as politicians_info_file:
+with open(POLITICIANS_INFO_FILE_PATH, 'r') as politicians_info_file:
     politicians_info_list = json.load(politicians_info_file)
     for politician in politicians_info_list:
         politicians_info[politician['facebook']] = politician
@@ -81,10 +80,10 @@ print("done in {:0.4f}s".format(time() - t0))
 print("Collecting posts...")
 t0 = time()
 posts_so_far = 0
-only_jsons = [f for f in listdir(DATA_DIR) if
-              isfile(join(DATA_DIR, f)) and f.endswith('.json') and not f == basename(politicians_info_file_path)]
+only_jsons = [f for f in listdir(FACEBOOK_POSTS_DIRECTORY) if
+              isfile(join(FACEBOOK_POSTS_DIRECTORY, f)) and f.endswith('.json') and not f == basename(POLITICIANS_INFO_FILE_PATH)]
 for post_file in only_jsons:
-    with open(join(DATA_DIR, post_file)) as tf:
+    with open(join(FACEBOOK_POSTS_DIRECTORY, post_file)) as tf:
         posts = json.load(tf)
         for post in posts:
             if 'message' in post:
@@ -401,6 +400,6 @@ print(graph)
 # Saving politicians graph
 print("Saving politicians graph...")
 t0 = time()
-with open(graph_file_path, 'w') as gf:
+with open(POLITICIANS_GRAPH_FILE_PATH, 'w') as gf:
     json.dump(graph, gf)
 print("done in {:0.4f}s".format(time() - t0))

@@ -8,8 +8,10 @@ import zlib
 from tweepy import TweepError
 from time import sleep
 
+from globals import POLITICIANS_INFO_FILE_PATH
+
 try:
-    with open('../data/politicians_info.json') as data_file:
+    with open(POLITICIANS_INFO_FILE_PATH) as data_file:
         users = json.load(data_file)
 except:
     print("A problem occurred when parsing politicians_info.json")

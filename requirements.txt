@@ -9,3 +9,4 @@ six==1.11.0
 tabulate==0.8.2
 tweetokenize==1.0.1
 Unidecode==1.0.22
+facebook
