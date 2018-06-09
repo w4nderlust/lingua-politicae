@@ -96,12 +96,7 @@ function init(error, data) {
 	radiusScale.domain(d3.extent(graph.nodes, (d)=>d.tweets));
 
 
-
-	initGraph();
-}
-
-
-function initGraph() {
+	// GRAPH 
 
 	edgesCont = svg.append("g").attr("id", "edgesCont");
 
@@ -159,10 +154,38 @@ function initGraph() {
 	.style("height", (d)=> radiusScale(d.tweets)+"px")
 	.style("pointer-events", "auto")
 	.on("mousedown", onNodeDown)
-	// .call(d3.drag()
-	// 	.on("start", dragstarted)
-	// 	.on("drag", dragged)
-	// 	.on("end", dragended));
+
+
+	// ------------- find most similar and dissimilar to each politician 
+	// TODO pre-calculate
+	graph.nodes.forEach(d=>{
+
+		let maxDistance = 0;
+		let minDistance = Infinity;
+		
+		graph.edges.forEach(t=>{
+
+			let issource = d.id == t.source;
+			let istarget = d.id == t.target;
+
+			if(issource || istarget) {
+				if(t.weight > maxDistance) {
+					maxDistance = t.weight;
+					d.mostSimilar = findNodeByIndex(t[!issource ? "source" : "target"]);
+				}
+				if(t.weight < minDistance) {
+					minDistance = t.weight;
+					d.leastSimilar = findNodeByIndex(t[!issource ? "source" : "target"]);
+				}
+			}
+		})
+
+	})
+	
+	function findNodeByIndex(i) {
+		return graph.nodes.find(d=>d.id == i)
+	}
+	// -------------------------------------------------------------------------------------------
 
 
 	simulation = d3.forceSimulation()
@@ -208,137 +231,46 @@ function ticked() {
 }
 
 
-
-
-function findEdgeBetweenNodes(nodeA, nodeB) {
-
-	let edge;
-	graph.edges.forEach(d=>{
-		if((d.source.id == nodeA.id || d.target.id == nodeA.id) && (d.source.id == nodeB.id || d.target.id == nodeB.id)) {
-			edge = d;
-		}
-	});
-
-	return edge;
-}
-
-function fadeOut(el) {
-	el
-	.transition()
-	.style("opacity", 0)
-	.on("end",()=>{
-		el.style("visibility", "hidden")
-	});
-}
-
-function fadeIn(el) {
-	el
-	.style("visibility", "visible")
-	.transition()
-	.style("opacity", 1)
-}
-
-
-function updateSidebar() {
+function onNodeDown(d) {
 
 	switch(state) {
 
 		case IDLE:
-		d3.select("#edge-source").call(fadeOut);
-		d3.select("#edge-target").call(fadeOut);
-		d3.select("#edge-info").call(fadeOut);
-		d3.select("#cta").text("Clicca su un cerchio per esplorare i collegamenti tra politici");
-
-
+		selectedSource = d;
+		state = NODE_MODE;
 		break;
 
 		case NODE_MODE:
-
-		// d3.select("#cta").text("Clicca su un altro nodo per vedere la relazione");
-		// node info
-		d3.select("#edge-source").call(fadeIn);
-		d3.select("#edge-target").call(fadeOut);
-		d3.select("#edge-info").call(fadeOut);
-		updateNodeInfo(d3.select("#edge-source"), selectedSource);
+		if(selectedSource == d) {
+			selectedSource = null;
+			state = IDLE;
+		} else {
+			selectedTarget = d;
+			selectedEdge = findEdgeBetweenNodes(selectedSource, selectedTarget);
+			state = LINK_MODE;
+		}
 		break;
 
 		case LINK_MODE:
-		d3.select("#edge-source").call(fadeIn);
-		d3.select("#edge-target").call(fadeIn);
-		d3.select("#edge-info").call(fadeIn);
-		
-
-		d3.select("#edge-names").text(`${selectedSource.name} – ${selectedTarget.name}`);
-		d3.select("#similarity").text(selectedEdge.weight);
-
-		updateNodeInfo(d3.select("#edge-source"), selectedSource);
-		updateNodeInfo(d3.select("#edge-target"), selectedTarget);
-		updateEdgeInfo();
-
-
-
-
+		selectedSource = d;
+		selectedTarget = null;
+		state = NODE_MODE;
 		break;
+
 	}
+
+	update();
 }
 
-function updateEdgeInfo() {
-
-	let isSourceFirst = selectedSource.id < selectedTarget.id;
-	let correlatedSourceWords = isSourceFirst ? selectedEdge.words.most_correlated_with_source : selectedEdge.words.most_correlated_with_target;
-	let correlatedTargetWords = !isSourceFirst ? selectedEdge.words.most_correlated_with_source : selectedEdge.words.most_correlated_with_target;
-
-
-
-	let $correlated_with_source = d3.select("#edge-most_correlated_with_source");
-
-	$correlated_with_source
-	.select("h3")
-	.text(`${selectedSource.name}`)
-	.style("color", colorScale(selectedSource.party));
-
-	$correlated_with_source
-	.select("ul")
-	.datum(correlatedSourceWords)
-	.call(populateList);
-
-	let $correlated_with_both = d3.select("#edge-most_correlated_with_both");
-
-	$correlated_with_both
-	.select("h3")
-	.text(`entrambe`);
-
-
-	$correlated_with_both
-	.select("ul")
-	.datum(selectedEdge.words.most_correlated_with_both)
-	.call(populateList);
-
-	let $correlated_with_target = d3.select("#edge-most_correlated_with_target");
-
-	$correlated_with_target
-	.select("h3")
-	.text(`${selectedTarget.name}`)
-	.style("color", colorScale(selectedTarget.party));
-
-
-	$correlated_with_target
-	.select("ul")
-	.datum(correlatedTargetWords)
-	.call(populateList);
-
-
-	function populateList(el) {
-		el
-		.html("")
-		.selectAll("li")
-		.data(d=>d)
-		.enter()
-		.append("li")
-		.text(d=>d[0]);
-	}
+function update(){
+	updateEdgeStrokes();
+	updateNodes();
+	updateSidebar();
 }
 
+
+
+// ------- UPDATES
 
 function updateNodes() {
 
@@ -444,55 +376,152 @@ function updateEdgeStrokes() {
 }
 
 
-function onNodeDown(d) {
+function updateSidebar() {
 
 	switch(state) {
 
 		case IDLE:
-		selectedSource = d;
-		state = NODE_MODE;
+		d3.select("#edge-source").call(fadeOut);
+		d3.select("#edge-target").call(fadeOut);
+		d3.select("#edge-info").call(fadeOut);
+		d3.select("#cta").text("Clicca su un cerchio per esplorare i collegamenti tra politici");
+
+
 		break;
 
 		case NODE_MODE:
-		if(selectedSource == d) {
-			selectedSource = null;
-			state = IDLE;
-		} else {
-			selectedTarget = d;
-			selectedEdge = findEdgeBetweenNodes(selectedSource, selectedTarget);
-			state = LINK_MODE;
-		}
+
+		// d3.select("#cta").text("Clicca su un altro nodo per vedere la relazione");
+		// node info
+		d3.select("#edge-source").call(fadeIn);
+		d3.select("#edge-target").call(fadeOut);
+		d3.select("#edge-info").call(fadeOut);
+		updateNodeInfo(d3.select("#edge-source"), selectedSource);
 		break;
 
 		case LINK_MODE:
-		selectedSource = d;
-		selectedTarget = null;
-		state = NODE_MODE;
+		d3.select("#edge-source").call(fadeIn);
+		d3.select("#edge-target").call(fadeIn);
+		d3.select("#edge-info").call(fadeIn);
+		
+
+		d3.select("#edge-names").text(`${selectedSource.name} – ${selectedTarget.name}`);
+		d3.select("#similarity").text(selectedEdge.weight);
+
+		updateNodeInfo(d3.select("#edge-source"), selectedSource);
+		updateNodeInfo(d3.select("#edge-target"), selectedTarget);
+		updateEdgeInfo();
 		break;
-
 	}
-
-	update();
 }
 
-function update(){
-	updateEdgeStrokes();
-	updateNodes();
-	updateSidebar();
-}
+
 
 function updateNodeInfo(el, d) {
 
 
-	el.select(".sidebar-nodetweets").text(`${d.tweets} tweets`);
+	el.select(".sidebar-nodetweets").text(`${d.tweets} posts`);
 	el.select(".sidebar-nodeimage").style("background-image", getImage(d)).style("border", `3px solid ${colorScale(d.party)}`)
 	el.select(".sidebar-nodename").text(d.name).style("color", colorScale(d.party));
 	el.select(".node-party").text(d.party);
 	el.select(".node-most-used").html(`<span>Parole più usate: </span> ${d.most_important_words.map(d=>d[0]).join(", ")}`)
+	el.select(".node-most-similar").html(`<span>Politico più simile: </span> ${d.mostSimilar.name}`)
+	el.select(".node-least-similar").html(`<span>Politico meno simile: </span> ${d.leastSimilar.name}`)
 
 
 }
 
+
+function updateEdgeInfo() {
+
+	let isSourceFirst = selectedSource.id < selectedTarget.id;
+	let correlatedSourceWords = isSourceFirst ? selectedEdge.words.most_correlated_with_source : selectedEdge.words.most_correlated_with_target;
+	let correlatedTargetWords = !isSourceFirst ? selectedEdge.words.most_correlated_with_source : selectedEdge.words.most_correlated_with_target;
+
+	let $correlated_with_source = d3.select("#edge-most_correlated_with_source");
+
+	// d3.select("#edge-distance").text(selectedEdge.weight)
+
+	$correlated_with_source
+	.select("h3")
+	.text(`${selectedSource.name}`)
+	.style("color", colorScale(selectedSource.party));
+
+	$correlated_with_source
+	.select("ul")
+	.datum(correlatedSourceWords)
+	.call(populateList);
+
+	let $correlated_with_both = d3.select("#edge-most_correlated_with_both");
+
+	$correlated_with_both
+	.select("h3")
+	.text(`entrambe`);
+
+
+	$correlated_with_both
+	.select("ul")
+	.datum(selectedEdge.words.most_correlated_with_both)
+	.call(populateList);
+
+	let $correlated_with_target = d3.select("#edge-most_correlated_with_target");
+
+	$correlated_with_target
+	.select("h3")
+	.text(`${selectedTarget.name}`)
+	.style("color", colorScale(selectedTarget.party));
+
+
+	$correlated_with_target
+	.select("ul")
+	.datum(correlatedTargetWords)
+	.call(populateList);
+
+
+	function populateList(el) {
+		el
+		.html("")
+		.selectAll("li")
+		.data(d=>d)
+		.enter()
+		.append("li")
+		.text(d=>d[0]);
+	}
+}
+
+
+
+
+// ------- UTILITIES
+function fadeOut(el) {
+	el
+	.transition()
+	.style("opacity", 0)
+	.on("end",()=>{
+		el.style("visibility", "hidden")
+	});
+}
+
+function fadeIn(el) {
+	el
+	.style("visibility", "visible")
+	.transition()
+	.style("opacity", 1)
+}
+
+
+
+function findEdgeBetweenNodes(nodeA, nodeB) {
+
+	let edge;
+	graph.edges.forEach(d=>{
+		if((d.source.id == nodeA.id || d.target.id == nodeA.id) && (d.source.id == nodeB.id || d.target.id == nodeB.id)) {
+			edge = d;
+		}
+	});
+
+	return edge;
+}
 function getImage(d) {
 	return `url(images/${d.twitter.substr(1)}.jpg)`;
 }
